@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+	xmlns:tns="http://ttdev.com/cs" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="ComputeService"
+	targetNamespace="http://ttdev.com/cs">
+	<wsdl:types>
+		<xsd:schema targetNamespace="http://ttdev.com/cs">
+			<xsd:element name="compute" type="xsd:string">
+			</xsd:element>
+			<xsd:element name="computeResponse" type="xsd:string">
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="computeRequest">
+		<wsdl:part element="tns:compute" name="parameters" />
+	</wsdl:message>
+	<wsdl:message name="computeResponse">
+		<wsdl:part element="tns:computeResponse" name="parameters" />
+	</wsdl:message>
+	<wsdl:portType name="ComputeService">
+		<wsdl:operation name="compute">
+			<wsdl:input message="tns:computeRequest" />
+			<wsdl:output message="tns:computeResponse" />
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="ComputeServiceSOAP" type="tns:ComputeService">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="compute">
+			<soap:operation soapAction="http://ttdev.com/cs/compute" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="ComputeService">
+		<wsdl:port binding="tns:ComputeServiceSOAP" name="p1">
+			<soap:address location="http://localhost:8080/cs/p1" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

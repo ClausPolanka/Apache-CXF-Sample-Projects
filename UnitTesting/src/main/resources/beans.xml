@@ -1,0 +1,14 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="
+http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.5.xsd
+http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
+	<bean id="logic" class="com.ttdev.cs.ComplexLogicImpl">
+	</bean>
+	<bean id="serviceImpl" class="com.ttdev.cs.ComputeServiceImpl">
+		<property name="logic" ref="logic" />
+	</bean>
+	<jaxws:endpoint id="endPoint1" address="/p1"
+		implementor="#serviceImpl">
+	</jaxws:endpoint>
+</beans>
