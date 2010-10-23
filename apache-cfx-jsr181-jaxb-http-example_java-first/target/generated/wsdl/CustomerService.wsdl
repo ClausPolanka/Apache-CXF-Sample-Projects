@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="CustomerServiceService" targetNamespace="http://customerrelations.mycompany.com/" xmlns:ns1="http://customerrelations.mycompany.com/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://customerrelations.mycompany.com/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://customerrelations.mycompany.com/">
+<xs:element name="getCustomerResponse" type="tns:getCustomerResponse"/>
+<xs:complexType name="getCustomerResponse">
+<xs:sequence>
+<xs:element minOccurs="0" name="return" type="tns:customer"/>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="BusinessLogicException" type="tns:BusinessLogicException"/>
+<xs:complexType name="BusinessLogicException">
+<xs:sequence>
+<xs:element name="message" nillable="true" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:element name="getCustomer" type="tns:getCustomer"/>
+<xs:complexType name="getCustomer">
+<xs:sequence>
+<xs:element minOccurs="0" name="customerNummber" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+</xs:schema>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://customerrelations.mycompany.com/" attributeFormDefault="unqualified" elementFormDefault="unqualified" targetNamespace="http://customerrelations.mycompany.com/">
+<xs:complexType name="objectFactory"/>
+<xs:complexType name="customer">
+<xs:sequence>
+<xs:element minOccurs="0" name="customerNumber" type="xs:string"/>
+<xs:element minOccurs="0" name="person" type="person"/>
+</xs:sequence>
+</xs:complexType>
+<xs:complexType name="person">
+<xs:sequence>
+<xs:element minOccurs="0" name="birthday" type="xs:dateTime"/>
+<xs:element minOccurs="0" name="firstname" type="xs:string"/>
+<xs:element minOccurs="0" name="gender" type="gender"/>
+<xs:element minOccurs="0" name="lastname" type="xs:string"/>
+</xs:sequence>
+</xs:complexType>
+<xs:simpleType name="gender">
+<xs:restriction base="xs:string">
+<xs:enumeration value="MALE"/>
+<xs:enumeration value="FEMALE"/>
+</xs:restriction>
+</xs:simpleType>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="BusinessLogicException">
+    <wsdl:part name="fault" element="ns1:BusinessLogicException">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCustomerResponse">
+    <wsdl:part name="parameters" element="ns1:getCustomerResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="getCustomer">
+    <wsdl:part name="parameters" element="ns1:getCustomer">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="CustomerService">
+    <wsdl:operation name="getCustomer">
+      <wsdl:input name="getCustomer" message="ns1:getCustomer">
+    </wsdl:input>
+      <wsdl:output name="getCustomerResponse" message="ns1:getCustomerResponse">
+    </wsdl:output>
+      <wsdl:fault name="BusinessLogicException" message="ns1:BusinessLogicException">
+    </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CustomerServiceServiceSoapBinding" type="ns1:CustomerService">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="getCustomer">
+      <soap:operation soapAction="getCustomer" style="document"/>
+      <wsdl:input name="getCustomer">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="getCustomerResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+      <wsdl:fault name="BusinessLogicException">
+        <soap:fault name="BusinessLogicException" use="literal"/>
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CustomerServiceService">
+    <wsdl:port name="CustomerServicePort" binding="ns1:CustomerServiceServiceSoapBinding">
+      <soap:address location="http://localhost:9090/hello"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
