@@ -1,6 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-  <classpathentry kind="src" path="src/main/java" including="**/*.java"/>
-  <classpathentry kind="src" path="src/main/resources" excluding="**/*.java"/>
-  <classpathentry kind="output" path="target/classes"/>
-  <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry including="**/*.java" kind="src" path="src/main/java"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java/end-to-end"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java/integration"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/java/unit"/>
+	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="lib/develop/hamcrest-all-1.2.jar"/>
+	<classpathentry kind="lib" path="lib/develop/junit-dep-4.8.1.jar" sourcepath="C:/Dev/Src/Workspaces/Eclipse/Helios/jee/Apache-CXF-Sample-Projects/bookstore-prototype/lib/develop/junit-dep-4.8.1-sources.jar"/>
+	<classpathentry kind="lib" path="lib/develop/jmock-2.6.0-RC2.jar"/>
+	<classpathentry kind="lib" path="lib/develop/jmock-junit4-2.6.0-RC2.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jst.ws.cxf.core.CXF_CLASSPATH_CONTAINER/Apache CXF/2.2.3">
+		<attributes>
+			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

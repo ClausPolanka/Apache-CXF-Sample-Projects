@@ -1,0 +1,50 @@
+<project name="bookstore-prototype" default="build">
+	<property name="src.dir" location="src/main/java" />
+	<property name="build.dir" location="target" />
+	<property name="app.classes.dir" location="${build.dir}/classes" />
+	<property name="test.classes.dir" location="${build.dir}/test-classes" />
+	<property name="test.dir" location="src/test/java" />
+	<property name="lib.dir" location="lib" />
+
+	<path id="app.lib.path">
+		<fileset dir="${lib.dir}/deploy" includes="*.jar" />
+	</path>
+
+	<path id="test.lib.path">
+		<fileset dir="${lib.dir}/develop" includes="*.jar" excludes="*-src.jar" />
+		<path location="${app.classes.dir}" />
+		<path refid="app.lib.path" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${build.dir}" quiet="true" />
+	</target>
+
+	<target name="app.compile">
+		<property name="app.src.dir" location="${src.dir}" />
+		<mkdir dir="${app.classes.dir}" />
+		<javac destdir="${app.classes.dir}" srcdir="${app.src.dir}" classpathref="app.lib.path" debug="on" includeantruntime="no" />
+	</target>
+
+	<target name="test.compile" depends="app.compile">
+		<property name="test.src.dir" location="${test.dir}/end-to-end" />
+		<mkdir dir="${test.classes.dir}" />
+		<javac destdir="${test.classes.dir}" srcdir="${test.src.dir}" classpathref="test.lib.path" debug="on" includeantruntime="no" />
+	</target>
+
+	<target name="test.run" description="Run the tests" depends="test.compile">
+		<property name="test.reports.dir" location="${build.dir}/testreports" />
+		<mkdir dir="${test.reports.dir}" />
+		<junit>
+			<batchtest todir="${test.reports.dir}" haltonfailure="true" haltonerror="true">
+				<formatter type="plain" />
+				<fileset dir="${test.dir}/end-to-end" includes="**/*Test.java" />
+			</batchtest>
+			<classpath>
+				<path refid="test.lib.path" />
+				<path location="${test.classes.dir}" />
+			</classpath>
+		</junit>
+	</target>
+	<target name="build" description="Clean, build, and full test" depends="clean, test.run" />
+</project>
