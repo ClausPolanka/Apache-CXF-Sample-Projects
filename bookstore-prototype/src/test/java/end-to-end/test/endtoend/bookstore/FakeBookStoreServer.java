@@ -61,7 +61,7 @@ public class FakeBookStoreServer {
 		// @formatter:on
 	}
 
-	public void hasReceivedAvailabilityInformationOfProduct() {
+	public void hasReceivedAvailabilityInformationOfProductFromWarehouse() {
 		// @formatter:off
 		assertThat("Product available in warehouse",
 				   bookstoreWebService.isProductAvailableInWarehouse(),

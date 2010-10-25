@@ -34,7 +34,7 @@ public class BookstoreEndToEndTest {
 		customer.orders(anOrderWithOneItem());
 		bookstoreServer.hasReceivedNewOrderRequest();
 		bookstoreServer.queriesCustomer();
-		bookstoreServer.hasReceivedAvailabilityInformationOfProduct();
+		bookstoreServer.hasReceivedAvailabilityInformationOfProductFromWarehouse();
 	}
 
 	private Order anOrderWithOneItem() {
