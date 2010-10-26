@@ -1,4 +1,4 @@
-package test.integration.bookstore.services;
+package test.integration.jaxb.bookstore.services;
 
 import bookstore.Address;
 

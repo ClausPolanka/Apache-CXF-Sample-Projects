@@ -1,4 +1,4 @@
-package test.integration.bookstore;
+package test.integration.jaxb.bookstore;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -14,8 +14,8 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.junit.Before;
 import org.junit.Test;
 
-import test.integration.bookstore.services.ProductTest;
-import test.integration.bookstore.services.ProductTestImpl;
+import test.integration.jaxb.bookstore.services.ProductTest;
+import test.integration.jaxb.bookstore.services.ProductTestImpl;
 import bookstore.Product;
 
 public class ProductJaxBTest {

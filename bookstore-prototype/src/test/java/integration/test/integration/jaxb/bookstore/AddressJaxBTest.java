@@ -1,4 +1,4 @@
-package test.integration.bookstore;
+package test.integration.jaxb.bookstore;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -10,8 +10,8 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.junit.Before;
 import org.junit.Test;
 
-import test.integration.bookstore.services.AddressTest;
-import test.integration.bookstore.services.AddressTestImpl;
+import test.integration.jaxb.bookstore.services.AddressTest;
+import test.integration.jaxb.bookstore.services.AddressTestImpl;
 
 import bookstore.Address;
 
