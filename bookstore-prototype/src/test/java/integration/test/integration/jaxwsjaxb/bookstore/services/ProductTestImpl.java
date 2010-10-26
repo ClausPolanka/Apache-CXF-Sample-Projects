@@ -1,4 +1,4 @@
-package test.integration.jaxb.bookstore.services;
+package test.integration.jaxwsjaxb.bookstore.services;
 
 import java.math.BigDecimal;
 

@@ -1,4 +1,4 @@
-package test.integration.jaxb.bookstore;
+package test.integration.jaxwsjaxb.bookstore;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
@@ -9,21 +9,21 @@ import javax.xml.ws.Endpoint;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import test.integration.jaxb.bookstore.services.ItemTest;
-import test.integration.jaxb.bookstore.services.ItemTestImpl;
-
+import test.integration.jaxwsjaxb.bookstore.services.ItemTest;
+import test.integration.jaxwsjaxb.bookstore.services.ItemTestImpl;
 import bookstore.Item;
 
-public class ItemJaxBTest {
+public class ItemJaxWsJaxBTest {
 
 	private static final String SERVICE_ENDPOINT = "http://localhost:9000/item";
 
 	private ItemTest itemService;
 
-	@Before
-	public void publishItemTestEndpoint() {
+	@BeforeClass
+	public static void publishItemTestEndpoint() {
 		Endpoint.publish(SERVICE_ENDPOINT, new ItemTestImpl());
 	}
 

@@ -1,4 +1,4 @@
-package test.integration.jaxb.bookstore;
+package test.integration.jaxwsjaxb.bookstore;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -8,21 +8,21 @@ import javax.xml.ws.Endpoint;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
-import test.integration.jaxb.bookstore.services.AddressTest;
-import test.integration.jaxb.bookstore.services.AddressTestImpl;
-
+import test.integration.jaxwsjaxb.bookstore.services.AddressTest;
+import test.integration.jaxwsjaxb.bookstore.services.AddressTestImpl;
 import bookstore.Address;
 
-public class AddressJaxBTest {
+public class AddressJaxWsJaxBTest {
 
 	private static final String SERVICE_ENDPOINT = "http://localhost:9000/address";
 
 	private AddressTest addressService;
 
-	@Before
-	public void publishAddressTestEndpoint() {
+	@BeforeClass
+	public static void publishAddressTestEndpoint() {
 		Endpoint.publish(SERVICE_ENDPOINT, new AddressTestImpl());
 	}
 
@@ -53,4 +53,5 @@ public class AddressJaxBTest {
 		assertThat("Address other", result.isOther(), equalTo(true));
 
 	}
+
 }
