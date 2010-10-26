@@ -5,12 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
-
 	private String id;
 	private String name;
 	private BigDecimal singleUnitPrice;
 	private List<Item> items = new ArrayList<Item>();
 
+	@SuppressWarnings("unused")
 	private Product() {
 		// Needed by Apache CXF.
 	}
@@ -56,5 +56,4 @@ public class Product {
 	public void setItems(List<Item> items) {
 		this.items = items;
 	}
-
 }

@@ -14,7 +14,7 @@ public class BookstoreJaxWS implements Bookstore {
 	private Customer customer;
 	private CustomerManagement customerService;
 	private Warehouse warehouse;
-	private ProductAvailability availability;
+	private ProductAvailability itemInWarehouse;
 
 	public BookstoreJaxWS(CustomerManagement customerService, Warehouse warehouse) {
 		this.customerService = customerService;
@@ -26,7 +26,10 @@ public class BookstoreJaxWS implements Bookstore {
 		this.order = order;
 		customer = customerService.getCustomer(order.getCustomerId());
 		for (Item each : order.getItems()) {
-			availability = warehouse.checkAvailability(each.getProduct(), each.getQuantity());
+			itemInWarehouse = warehouse.checkAvailability(each.getProduct(), each.getQuantity());
+			if (itemInWarehouse.isAvailable()) {
+				warehouse.order(each.getProduct(), each.getQuantity());
+			}
 		}
 	}
 
@@ -39,7 +42,7 @@ public class BookstoreJaxWS implements Bookstore {
 	}
 
 	public boolean isProductAvailableInWarehouse() {
-		return availability.isAvailable();
+		return itemInWarehouse.isAvailable();
 	}
 
 }

@@ -9,29 +9,29 @@ import javax.xml.ws.Endpoint;
 
 import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
+import bookstore.CustomerManagement;
+import bookstore.Warehouse;
 import bookstore.services.BookstoreJaxWS;
 import bookstore.services.CustomerManagementJaxRS;
 import bookstore.services.CustomerManagementJaxWS;
+import bookstore.services.WarehouseJaxWS;
 
 public class FakeBookStoreServer {
 
-	protected static final String[] NO_ARGS = null;
-	private BookstoreJaxWS bookstoreWebService;
-	private CustomerManagementJaxWS customerManagementJaxWS;
-
-	public FakeBookStoreServer(BookstoreJaxWS bookstoreWebService, CustomerManagementJaxWS customerManagementJaxWS) {
-		this.bookstoreWebService = bookstoreWebService;
-		this.customerManagementJaxWS = customerManagementJaxWS;
-	}
+	private BookstoreJaxWS bookstoreService;
 
 	public void startSellingProducts() {
-		Endpoint.publish("http://localhost:9000/bookstore", bookstoreWebService);
-		Endpoint.publish("http://localhost:9000/customermanagement", customerManagementJaxWS);
+		Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS());
+		Endpoint.publish("http://localhost:9000/customermanagement", new CustomerManagementJaxWS());
+
+		bookstoreService = new BookstoreJaxWS(createCustomerService(), createWarehouse());
+		Endpoint.publish("http://localhost:9000/bookstore", bookstoreService);
 
 		publishJaxRSCustomerManagementService();
 
-		assertThat("Order bevore new request", bookstoreWebService.getOrder(), nullValue());
+		assertThat("Order bevore new request", bookstoreService.getOrder(), nullValue());
 	}
 
 	private void publishJaxRSCustomerManagementService() {
@@ -42,13 +42,27 @@ public class FakeBookStoreServer {
 		sf.create();
 	}
 
+	private CustomerManagement createCustomerService() {
+		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+		factory.setServiceClass(CustomerManagement.class);
+		factory.setAddress("http://localhost:9000/customermanagement");
+		return (CustomerManagement) factory.create();
+	}
+
+	private Warehouse createWarehouse() {
+		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+		factory.setServiceClass(Warehouse.class);
+		factory.setAddress("http://localhost:9000/warehouse");
+		return (Warehouse) factory.create();
+	}
+
 	public void hasReceivedNewOrderRequest() {
 		// @formatter:off
 		assertThat("Customer after new order request",
-				   bookstoreWebService.getOrder().getCustomer(),
+				   bookstoreService.getOrder().getCustomer(),
 				   notNullValue());
 		assertThat("Order after new order request",
-				   bookstoreWebService.getOrder(),
+				   bookstoreService.getOrder(),
 				   notNullValue());
 		// @formatter:on
 	}
@@ -56,7 +70,7 @@ public class FakeBookStoreServer {
 	public void queriesCustomer() {
 		// @formatter:off
 		assertThat("Customer queried via customer service",
-				   bookstoreWebService.getCustomer().getName(),
+				   bookstoreService.getCustomer().getName(),
 				   equalTo("customer"));
 		// @formatter:on
 	}
@@ -64,7 +78,7 @@ public class FakeBookStoreServer {
 	public void hasReceivedAvailabilityInformationOfProductFromWarehouse() {
 		// @formatter:off
 		assertThat("Product available in warehouse",
-				   bookstoreWebService.isProductAvailableInWarehouse(),
+				   bookstoreService.isProductAvailableInWarehouse(),
 				   equalTo(true));
 		// @formatter:on
 	}

@@ -1,15 +1,6 @@
 package bookstore;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "address")
 public class Address {
-
-	@XmlAttribute(name = "id")
 	private String id;
 	private String street;
 	private String city;
@@ -20,6 +11,7 @@ public class Address {
 	private boolean isBilling;
 	private boolean isOther;
 
+	@SuppressWarnings("unused")
 	private Address() {
 		// Needed by Apache CXF.
 	}
@@ -31,6 +23,8 @@ public class Address {
 		this.house = house;
 		this.door = door;
 		this.zipCode = zipCode;
+		this.isShipping = isShipping;
+		this.isBilling = isBilling;
 		this.isOther = isOther;
 	}
 

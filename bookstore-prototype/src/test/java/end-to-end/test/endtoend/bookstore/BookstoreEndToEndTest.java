@@ -9,23 +9,12 @@ import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 import org.junit.Test;
 
 import bookstore.Address;
+import bookstore.Item;
 import bookstore.Order;
-import bookstore.services.BookstoreJaxWS;
-import bookstore.services.CustomerManagementJaxWS;
-import bookstore.services.WarehouseJaxWS;
 
 public class BookstoreEndToEndTest {
 
-	private final CustomerManagementJaxWS customerService = new CustomerManagementJaxWS();
-	private final WarehouseJaxWS warehouse = new WarehouseJaxWS();
-
-	//@formatter:off
-	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(
-		new BookstoreJaxWS(customerService, warehouse),
-		customerService
-	);
-	//@formatter:on
-
+	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer();
 	private final ApplicationClient customer = new ApplicationClient();
 
 	@Test
@@ -39,10 +28,19 @@ public class BookstoreEndToEndTest {
 
 	private Order anOrderWithOneItem() {
 		//@formatter:off
-		return anOrder().fromCustomer(aCustomer().build())
-						.withItem(anItem()
-									.ofQuantity(1)
-									.ofProduct(aProduct().build()).build()).build();
+		return anOrder()
+			       .fromCustomer(aCustomer().build())
+				   .withItem(anItemOfOneProduct())
+			   .build();
+		//@formatter:on
+	}
+
+	private Item anItemOfOneProduct() {
+		//@formatter:off
+		return anItem()
+				.ofQuantity(1)
+				.ofProduct(aProduct().build())
+				.build();
 		//@formatter:on
 	}
 

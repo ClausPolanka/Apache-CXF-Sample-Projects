@@ -3,29 +3,20 @@ package bookstore;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "customer")
 public class Customer {
-
-	@XmlAttribute(name = "id")
 	private String id;
 	private String name;
 	private List<Address> addresses = new ArrayList<Address>();
-	@XmlTransient
 	private List<Order> orders = new ArrayList<Order>();
 
+	@SuppressWarnings("unused")
 	private Customer() {
 		// Needed by Apache CXF.
 	}
 
-	public Customer(String id) {
+	public Customer(String id, String name) {
 		this.id = id;
+		this.name = name;
 	}
 
 	public void addAddress(Address address) {

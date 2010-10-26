@@ -1,19 +1,11 @@
 package bookstore;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
-
-@XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement(name = "item")
 public class Item {
-
 	private int quantity;
-	@XmlTransient
 	private Order order;
 	private Product product;
 
+	@SuppressWarnings("unused")
 	private Item() {
 		// Needed by Apache CXF.
 	}
@@ -47,5 +39,4 @@ public class Item {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
-
 }

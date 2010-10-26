@@ -29,13 +29,12 @@ public class CustomerBuilder {
 	}
 
 	public Customer build() {
-		Customer customer = new Customer(id);
+		Customer customer = new Customer(id, name);
 		for (Address each : addresses) {
 			customer.addAddress(each);
 		}
 		for (Order each : orders) {
 			customer.addOrder(each);
-			each.setCustomer(customer);
 		}
 		return customer;
 	}

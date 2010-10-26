@@ -32,7 +32,8 @@ public class ItemBuilder {
 	}
 
 	public Item build() {
-		return new Item(quantity, order, product);
+		Item item = new Item(quantity, order, product);
+		return item;
 	}
 
 }

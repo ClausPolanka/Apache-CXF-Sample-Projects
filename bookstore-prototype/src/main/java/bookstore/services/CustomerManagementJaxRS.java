@@ -24,8 +24,7 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 	}
 
 	private void createTestCustomers() {
-		Customer customer = new Customer("customerId");
-		customer.setName("customer");
+		Customer customer = new Customer("customerId", "customer");
 		customers.put(customer.getId(), customer);
 	}
 

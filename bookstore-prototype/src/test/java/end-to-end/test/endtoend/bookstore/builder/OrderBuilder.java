@@ -11,7 +11,6 @@ import bookstore.Item;
 import bookstore.Order;
 
 public class OrderBuilder {
-
 	private String id = "orderId";
 	private Date orderDate = new Date();
 	private Customer customer = aCustomer().build();
@@ -33,10 +32,8 @@ public class OrderBuilder {
 
 	public Order build() {
 		Order order = new Order(id, orderDate, customer);
-		customer.addOrder(order);
 		for (Item each : items) {
 			order.addItem(each);
-			each.setOrder(order);
 		}
 		return order;
 	}
