@@ -10,7 +10,7 @@ import bookstore.Product;
 public class ProductBuilder {
 
 	private String id = "productId";
-	private String name = "name";
+	private String name = "product";
 	private BigDecimal singleUnitPrice = new BigDecimal(1);
 	private List<Item> items = new ArrayList<Item>();
 
@@ -27,7 +27,6 @@ public class ProductBuilder {
 		Product product = new Product(id, name, singleUnitPrice);
 		for (Item each : items) {
 			product.addItem(each);
-			each.setProduct(product);
 		}
 		return product;
 	}
