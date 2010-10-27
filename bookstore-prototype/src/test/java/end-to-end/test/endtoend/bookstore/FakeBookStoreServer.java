@@ -10,27 +10,27 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
+import bookstore.BookstoreRepository;
 import bookstore.CustomerManagement;
 import bookstore.ShippingService;
 import bookstore.Warehouse;
 import bookstore.services.BookstoreJaxWS;
 import bookstore.services.CustomerManagementJaxRS;
 import bookstore.services.CustomerManagementJaxWS;
-import bookstore.services.CustomerRepository;
 import bookstore.services.ShippingServiceJaxWS;
 import bookstore.services.WarehouseJaxWS;
 
 public class FakeBookStoreServer {
 
 	private BookstoreJaxWS bookstoreService;
-	private CustomerRepository repository;
+	private BookstoreRepository repository;
 
-	public FakeBookStoreServer(CustomerRepository repository) {
+	public FakeBookStoreServer(BookstoreRepository repository) {
 		this.repository = repository;
 	}
 
 	public void startSellingProducts() {
-		Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS());
+		Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS(repository));
 		Endpoint.publish("http://localhost:9000/customermanagement", new CustomerManagementJaxWS());
 		Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWS());
 

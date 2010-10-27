@@ -25,8 +25,8 @@ import bookstore.Warehouse;
 import bookstore.services.BookstoreJaxWS;
 
 public class BookstoreJaxWSTest {
-
-	private static final BigDecimal NEW_OPEN_BALENCE = new BigDecimal(4);
+	private static final BigDecimal NEW_BALANCE_3 = new BigDecimal(3);
+	private static final BigDecimal NEW_BALENCE_4 = new BigDecimal(4);
 	private static final BigDecimal SINGLE_UNIT_PRICE = new BigDecimal(1);
 	private static final BigDecimal TOTAL_PRICE = new BigDecimal(1);
 	private static final int AMOUNT_1 = 1;
@@ -35,13 +35,10 @@ public class BookstoreJaxWSTest {
 
 	@Rule
 	public JUnitRuleMockery context = new JUnitRuleMockery();
-
 	@Mock
 	private CustomerManagement customerService;
-
 	@Mock
 	private Warehouse warehouse;
-
 	@Mock
 	private ShippingService shippingService;
 
@@ -55,7 +52,7 @@ public class BookstoreJaxWSTest {
 	@Test
 	public void orderExactlyOneProductFormWarehouse() {
 		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
-		final Item anItem = anItem().ofProduct(aProduct).build();
+		final Item anItem = anItem().ofQuantity(1).ofProduct(aProduct).build();
 		final Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
 		final Order anOrder = anOrder().fromCustomer(aCustomer).withItem(anItem).build();
 
@@ -63,12 +60,15 @@ public class BookstoreJaxWSTest {
 		context.checking(new Expectations() {{
 			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
 
-			oneOf(warehouse).checkAvailability(aProduct, AMOUNT_1); will(returnValue(availableInWarehouse()));
-			oneOf(warehouse).order(aProduct, AMOUNT_1); will(returnValue(TOTAL_PRICE));
+			oneOf(warehouse).checkAvailability(aProduct, anItem.getQuantity());
+			will(returnValue(availableInWarehouse()));
+
+			oneOf(warehouse).order(aProduct, anItem.getQuantity());
+			will(returnValue(TOTAL_PRICE));
 
 			oneOf(shippingService).shipItems(new Item[] {anItem}, aCustomer.getShippingAddress());
 
-			oneOf(customerService).updateAccaount(aCustomer.getId(), NEW_OPEN_BALENCE);
+			oneOf(customerService).updateAccaount(aCustomer.getId(), NEW_BALENCE_4);
 			oneOf(customerService).notify(aCustomer, "message");
         }});
 		//@formatter:on
@@ -84,20 +84,24 @@ public class BookstoreJaxWSTest {
 	public void orderExactlyTwoProductsFormWarehouse() {
 		final Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
 		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
-		final Item anItem1 = anItem().ofProduct(aProduct).build();
-		final Item anItem2 = anItem().ofProduct(aProduct).build();
+		final Item anItem1 = anItem().ofQuantity(1).ofProduct(aProduct).build();
+		final Item anItem2 = anItem().ofQuantity(1).ofProduct(aProduct).build();
 		final Order anOrder = anOrder().fromCustomer(aCustomer).withItem(anItem1).withItem(anItem2).build();
 
 		//@formatter:off
 		context.checking(new Expectations() {{
-			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
+			oneOf(customerService).getCustomer(anOrder.getCustomerId());
+			will(returnValue(aCustomer));
 
-			allowing(warehouse).checkAvailability(aProduct, AMOUNT_1); will(returnValue(availableInWarehouse()));
-			allowing(warehouse).order(aProduct, AMOUNT_1); will(returnValue(TOTAL_PRICE));
+			allowing(warehouse).checkAvailability(aProduct, AMOUNT_1);
+			will(returnValue(availableInWarehouse()));
+
+			allowing(warehouse).order(aProduct, AMOUNT_1);
+			will(returnValue(TOTAL_PRICE));
 
 			oneOf(shippingService).shipItems(new Item[] {anItem1, anItem2}, aCustomer.getShippingAddress());
 
-			oneOf(customerService).updateAccaount(aCustomer.getId(), NEW_OPEN_BALENCE);
+			oneOf(customerService).updateAccaount(aCustomer.getId(), NEW_BALANCE_3);
 			oneOf(customerService).notify(aCustomer, "message");
 		}});
 		//@formatter:on

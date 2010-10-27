@@ -9,15 +9,16 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
+import bookstore.BookstoreRepository;
 import bookstore.Customer;
 import bookstore.CustomerManagement;
 
 @Path("/customerservice/")
 public class CustomerManagementJaxRS implements CustomerManagement {
 
-	private CustomerRepository database;
+	private BookstoreRepository database;
 
-	public CustomerManagementJaxRS(CustomerRepository database) {
+	public CustomerManagementJaxRS(BookstoreRepository database) {
 		this.database = database;
 	}
 

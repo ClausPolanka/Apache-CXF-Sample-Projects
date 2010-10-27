@@ -14,11 +14,10 @@ import bookstore.Warehouse;
 public class BookstoreJaxWS implements Bookstore {
 	private Order order;
 	private Customer aCustomer;
-	private BigDecimal totalPrice;
+	private BigDecimal totalPrice = new BigDecimal(0);
 
 	private Warehouse warehouse;
 	private CustomerManagement customerService;
-	private ProductAvailability itemInWarehouse;
 	private ShippingService shippingService;
 
 	public BookstoreJaxWS(CustomerManagement customerService, Warehouse warehouse, ShippingService shippingService) {
@@ -40,12 +39,20 @@ public class BookstoreJaxWS implements Bookstore {
 	}
 
 	private void order(Item anItem) {
-		itemInWarehouse = warehouse.checkAvailability(anItem.getProduct(), anItem.getQuantity());
-		if (itemInWarehouse.isAvailable()) {
-			totalPrice = warehouse.order(anItem.getProduct(), anItem.getQuantity());
+		if (availableInWarehouse(anItem)) {
+			totalPrice = totalPrice.add(orderFromWarehouse(anItem));
 		} else {
 			// TODO Order from Supplier.
 		}
+	}
+
+	private BigDecimal orderFromWarehouse(Item anItem) {
+		return warehouse.order(anItem.getProduct(), anItem.getQuantity());
+	}
+
+	private boolean availableInWarehouse(Item anItem) {
+		ProductAvailability item = warehouse.checkAvailability(anItem.getProduct(), anItem.getQuantity());
+		return item.isAvailable();
 	}
 
 	private Item[] itemsToArry(Order order) {

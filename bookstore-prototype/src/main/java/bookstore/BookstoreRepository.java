@@ -1,10 +1,8 @@
-package bookstore.services;
+package bookstore;
 
 import java.math.BigDecimal;
 
-import bookstore.Customer;
-
-public interface CustomerRepository {
+public interface BookstoreRepository {
 
 	void addCustomer(Customer customer);
 
@@ -15,5 +13,9 @@ public interface CustomerRepository {
 	void updateCustomer(Customer customer);
 
 	void updateAccount(Customer customer, BigDecimal balance);
+
+	void deleteProduct(Product aProduct);
+
+	int countProducts(String id);
 
 }

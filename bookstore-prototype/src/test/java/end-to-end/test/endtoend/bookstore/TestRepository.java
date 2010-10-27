@@ -1,30 +1,44 @@
 package test.endtoend.bookstore;
 
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import bookstore.BookstoreRepository;
 import bookstore.Customer;
-import bookstore.services.CustomerRepository;
+import bookstore.Product;
 
-public class CustomerTestDatabase implements CustomerRepository {
+public class TestRepository implements BookstoreRepository {
 
 	private Map<String, Customer> customers = new HashMap<String, Customer>();
+	private Map<String, List<Product>> warehouseProducts = new HashMap<String, List<Product>>();
 
-	public CustomerTestDatabase() {
+	public TestRepository() {
 		createTestCustomers();
-	}
-
-	@Override
-	public void addCustomer(Customer customer) {
-		customers.put(customer.getId(), customer);
+		createTestProdcutsForWarehouse();
 	}
 
 	void createTestCustomers() {
 		Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
 		customers.put(aCustomer.getId(), aCustomer);
+	}
+
+	private void createTestProdcutsForWarehouse() {
+		ArrayList<Product> products = new ArrayList<Product>();
+		Product aProduct = aProduct().build();
+		products.add(aProduct);
+		products.add(aProduct);
+		warehouseProducts.put(aProduct.getId(), products);
+	}
+
+	@Override
+	public void addCustomer(Customer customer) {
+		customers.put(customer.getId(), customer);
 	}
 
 	@Override
@@ -60,5 +74,16 @@ public class CustomerTestDatabase implements CustomerRepository {
 			customers.put(c.getId(), c);
 		}
 
+	}
+
+	@Override
+	public void deleteProduct(Product aProduct) {
+		List<Product> products = warehouseProducts.get(aProduct.getId());
+		// TODO Implement
+	}
+
+	@Override
+	public int countProducts(String id) {
+		return warehouseProducts.get(id).size();
 	}
 }

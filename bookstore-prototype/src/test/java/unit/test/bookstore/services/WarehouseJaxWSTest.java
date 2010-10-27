@@ -7,23 +7,100 @@ import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 
 import java.math.BigDecimal;
 
+import org.jmock.Expectations;
+import org.jmock.auto.Mock;
+import org.jmock.integration.junit4.JUnitRuleMockery;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
+import bookstore.BookstoreRepository;
 import bookstore.Product;
+import bookstore.ProductAvailability;
 import bookstore.Warehouse;
 import bookstore.services.WarehouseJaxWS;
 
 public class WarehouseJaxWSTest {
+	private static final BigDecimal TOTAL_PRICE_4 = new BigDecimal(4);
+	private static final BigDecimal TOTAL_PRICE_2 = new BigDecimal(2);
 	private static final BigDecimal SINGLE_UNIT_PRICE = new BigDecimal(2);
+	private static final boolean AVAILABLE = true;
+	private static final boolean NOT_AVAILABLE = false;
 	private static final int AMOUNT_1 = 1;
-	private Warehouse warehouseService = new WarehouseJaxWS();
+	private static final int AMOUNT_2 = 2;
+	private static final int NO_PRODUCTS = 0;
+	private static final int ANY_NR_HIGHER_THAN_ZERO = 1;
+
+	@Rule
+	public JUnitRuleMockery context = new JUnitRuleMockery();
+
+	@Mock
+	private BookstoreRepository respository;
+
+	private Warehouse warehouseService;
+
+	@Before
+	public void createWarehouse() {
+		warehouseService = new WarehouseJaxWS(respository);
+	}
+
+	@Test
+	public void checkIfProductIsAvailableInWarehouse() {
+		final Product aProduct = aProduct().build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(respository).countProducts(aProduct.getId()); will(returnValue(AMOUNT_1));
+		}});
+		// @formatter:on
+
+		ProductAvailability result = warehouseService.checkAvailability(aProduct, AMOUNT_1);
+
+		assertThat("Product available in warehouse", result.isAvailable(), is(AVAILABLE));
+	}
+
+	@Test
+	public void notEnoughProductsAvailableInWarehouse() {
+		final Product aProduct = aProduct().build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(respository).countProducts(aProduct.getId()); will(returnValue(NO_PRODUCTS));
+		}});
+		// @formatter:on
+
+		ProductAvailability result = warehouseService.checkAvailability(aProduct, ANY_NR_HIGHER_THAN_ZERO);
+
+		assertThat("Product not available in warehouse", result.isAvailable(), is(NOT_AVAILABLE));
+	}
 
 	@Test
 	public void orderExactlyOneProduct() {
-		Product aProdcut = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
 
-		BigDecimal totalPrice = warehouseService.order(aProdcut, AMOUNT_1);
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(respository).deleteProduct(aProduct);
+		}});
+		// @formatter:on
 
-		assertThat("Total price", totalPrice, is(equalTo(new BigDecimal(2))));
+		BigDecimal totalPrice = warehouseService.order(aProduct, AMOUNT_1);
+
+		assertThat("Total price", totalPrice, is(equalTo(TOTAL_PRICE_2)));
+	}
+
+	@Test
+	public void orderExactlyTwoProducts() {
+		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			allowing(respository).deleteProduct(aProduct);
+		}});
+		// @formatter:on
+
+		BigDecimal totalPrice = warehouseService.order(aProduct, AMOUNT_2);
+
+		assertThat("Total price", totalPrice, is(equalTo(TOTAL_PRICE_4)));
 	}
 }

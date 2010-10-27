@@ -9,16 +9,16 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
+import bookstore.BookstoreRepository;
 import bookstore.Item;
 import bookstore.Order;
-import bookstore.services.CustomerRepository;
 
 public class BookstoreEndToEndTest {
 
 	private static final String MESSAGE = "message";
 	private static final BigDecimal NEW_BALANCE = new BigDecimal(4);
 
-	private CustomerRepository repository = new CustomerTestDatabase();
+	private BookstoreRepository repository = new TestRepository();
 	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(repository);
 	private final ApplicationClient customer = new ApplicationClient(repository);
 

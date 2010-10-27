@@ -2,32 +2,38 @@ package bookstore.services;
 
 import java.math.BigDecimal;
 
+import bookstore.BookstoreRepository;
 import bookstore.Product;
 import bookstore.ProductAvailability;
 import bookstore.Warehouse;
 
 public class WarehouseJaxWS implements Warehouse {
+	private static final boolean AVAILABLE = true;
+	private static final boolean NOT_AVAILABLE = false;
 
-	// private Map<String, Product> products = new HashMap<String, Product>();
+	private BookstoreRepository repository;
 
-	public WarehouseJaxWS() {
-		// createTestProducts();
-	}
-
-	private void createTestProducts() {
-		Product product = new Product("productId", "product", new BigDecimal(1));
-		// products.put(product.getId(), product);
+	public WarehouseJaxWS(BookstoreRepository repository) {
+		this.repository = repository;
 	}
 
 	@Override
 	public ProductAvailability checkAvailability(Product product, int amount) {
-		// Product found = products.get(product.getId());
-		return new ProductAvailability(true, 1);
+		if (countOf(product) < amount) {
+			return new ProductAvailability(NOT_AVAILABLE, 0);
+		}
+		return new ProductAvailability(AVAILABLE, 1);
+	}
+
+	private int countOf(Product product) {
+		return repository.countProducts(product.getId());
 	}
 
 	@Override
 	public BigDecimal order(Product product, int amount) {
-		// products.remove(product.getId());
+		for (int i = 0; i < amount; i++) {
+			repository.deleteProduct(product);
+		}
 		return new BigDecimal(amount).multiply(product.getSingleUnitPrice());
 	}
 }
