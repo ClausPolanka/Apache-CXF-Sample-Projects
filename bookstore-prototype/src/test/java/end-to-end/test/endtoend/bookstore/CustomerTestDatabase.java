@@ -1,4 +1,4 @@
-package bookstore.services;
+package test.endtoend.bookstore;
 
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
 
@@ -7,17 +7,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 import bookstore.Customer;
+import bookstore.services.CustomerRepository;
 
-public class CustomerDatabase {
+public class CustomerTestDatabase implements CustomerRepository {
 
-	public static CustomerDatabase database = new CustomerDatabase();
+	private Map<String, Customer> customers = new HashMap<String, Customer>();
 
-	public Map<String, Customer> customers = new HashMap<String, Customer>();
-
-	private CustomerDatabase() {
+	public CustomerTestDatabase() {
 		createTestCustomers();
 	}
 
+	@Override
 	public void addCustomer(Customer customer) {
 		customers.put(customer.getId(), customer);
 	}
@@ -27,6 +27,7 @@ public class CustomerDatabase {
 		customers.put(aCustomer.getId(), aCustomer);
 	}
 
+	@Override
 	public void deleteCustomer(String id) {
 		Customer c = customers.get(id);
 		if (c != null) {
@@ -34,10 +35,12 @@ public class CustomerDatabase {
 		}
 	}
 
+	@Override
 	public Customer getCustomer(String id) {
 		return customers.get(id);
 	}
 
+	@Override
 	public void updateCustomer(Customer customer) {
 		Customer c = customers.get(customer.getId());
 		c.setAddresses(customer.getAddresses());
@@ -49,6 +52,7 @@ public class CustomerDatabase {
 		}
 	}
 
+	@Override
 	public void updateAccount(Customer customer, BigDecimal balance) {
 		Customer c = customers.get(customer.getId());
 		c.setOpenBalance(balance);

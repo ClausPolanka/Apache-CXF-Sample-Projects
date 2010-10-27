@@ -27,12 +27,42 @@
 	</target>
 
 	<target name="test.compile" depends="app.compile">
-		<property name="test.src.dir" location="${test.dir}/end-to-end" />
+		<property name="test.src.dir" location="${test.dir}" />
 		<mkdir dir="${test.classes.dir}" />
 		<javac destdir="${test.classes.dir}" srcdir="${test.src.dir}" classpathref="test.lib.path" debug="on" includeantruntime="no" />
 	</target>
 
-	<target name="test.run" description="Run the tests" depends="test.compile">
+	<target name="unittest.run" description="Run the tests" depends="test.compile">
+		<property name="test.reports.dir" location="${build.dir}/testreports" />
+		<mkdir dir="${test.reports.dir}" />
+		<junit>
+			<batchtest todir="${test.reports.dir}" haltonfailure="true" haltonerror="true">
+				<formatter type="plain" />
+				<fileset dir="${test.dir}/unit" includes="**/*Test.java" />
+			</batchtest>
+			<classpath>
+				<path refid="test.lib.path" />
+				<path location="${test.classes.dir}" />
+			</classpath>
+		</junit>
+	</target>
+
+	<target name="integrationtest.run" description="Run the tests" depends="test.compile">
+		<property name="test.reports.dir" location="${build.dir}/testreports" />
+		<mkdir dir="${test.reports.dir}" />
+		<junit>
+			<batchtest todir="${test.reports.dir}" haltonfailure="true" haltonerror="true">
+				<formatter type="plain" />
+				<fileset dir="${test.dir}/unit" includes="**/*Test.java" />
+			</batchtest>
+			<classpath>
+				<path refid="test.lib.path" />
+				<path location="${test.classes.dir}" />
+			</classpath>
+		</junit>
+	</target>
+
+	<target name="endtoendtest.run" description="Run the tests" depends="test.compile">
 		<property name="test.reports.dir" location="${build.dir}/testreports" />
 		<mkdir dir="${test.reports.dir}" />
 		<junit>
@@ -46,5 +76,7 @@
 			</classpath>
 		</junit>
 	</target>
+
+	<target name="test.run" description="Run the tests" depends="unittest.run, integrationtest.run, endtoendtest.run"/>
 	<target name="build" description="Clean, build, and full test" depends="clean, test.run" />
 </project>

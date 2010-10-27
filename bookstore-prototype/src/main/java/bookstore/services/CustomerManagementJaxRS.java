@@ -1,7 +1,5 @@
 package bookstore.services;
 
-import static bookstore.services.CustomerDatabase.database;
-
 import java.math.BigDecimal;
 
 import javax.ws.rs.DELETE;
@@ -16,6 +14,12 @@ import bookstore.CustomerManagement;
 
 @Path("/customerservice/")
 public class CustomerManagementJaxRS implements CustomerManagement {
+
+	private CustomerRepository database;
+
+	public CustomerManagementJaxRS(CustomerRepository database) {
+		this.database = database;
+	}
 
 	@POST
 	@Path("/customers/")

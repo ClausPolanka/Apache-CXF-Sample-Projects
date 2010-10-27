@@ -1,6 +1,5 @@
 package test.endtoend.bookstore;
 
-import static bookstore.services.CustomerDatabase.database;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -12,10 +11,16 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import bookstore.Bookstore;
 import bookstore.Customer;
 import bookstore.Order;
+import bookstore.services.CustomerRepository;
 
 public class ApplicationClient {
 
 	private Customer customer;
+	private CustomerRepository repository;
+
+	public ApplicationClient(CustomerRepository repository) {
+		this.repository = repository;
+	}
 
 	public void orders(Order order) {
 		this.customer = order.getCustomer();
@@ -31,7 +36,7 @@ public class ApplicationClient {
 	}
 
 	private Customer customer() {
-		Customer aCustomer = database.getCustomer(customer.getId());
+		Customer aCustomer = repository.getCustomer(customer.getId());
 		return aCustomer;
 	}
 

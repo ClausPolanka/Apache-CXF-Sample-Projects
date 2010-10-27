@@ -11,13 +11,16 @@ import org.junit.Test;
 
 import bookstore.Item;
 import bookstore.Order;
+import bookstore.services.CustomerRepository;
 
 public class BookstoreEndToEndTest {
 
 	private static final String MESSAGE = "message";
 	private static final BigDecimal NEW_BALANCE = new BigDecimal(4);
-	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer();
-	private final ApplicationClient customer = new ApplicationClient();
+
+	private CustomerRepository repository = new CustomerTestDatabase();
+	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(repository);
+	private final ApplicationClient customer = new ApplicationClient(repository);
 
 	@Test
 	public void customerOrdersOneProductWhichIsAvailableInWarehouse() {

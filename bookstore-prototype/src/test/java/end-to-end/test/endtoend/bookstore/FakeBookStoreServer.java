@@ -16,12 +16,18 @@ import bookstore.Warehouse;
 import bookstore.services.BookstoreJaxWS;
 import bookstore.services.CustomerManagementJaxRS;
 import bookstore.services.CustomerManagementJaxWS;
+import bookstore.services.CustomerRepository;
 import bookstore.services.ShippingServiceJaxWS;
 import bookstore.services.WarehouseJaxWS;
 
 public class FakeBookStoreServer {
 
 	private BookstoreJaxWS bookstoreService;
+	private CustomerRepository repository;
+
+	public FakeBookStoreServer(CustomerRepository repository) {
+		this.repository = repository;
+	}
 
 	public void startSellingProducts() {
 		Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS());
@@ -39,7 +45,7 @@ public class FakeBookStoreServer {
 	private void publishJaxRSCustomerManagementService() {
 		JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
 		sf.setResourceClasses(CustomerManagementJaxRS.class);
-		sf.setResourceProvider(CustomerManagementJaxRS.class, new SingletonResourceProvider(new CustomerManagementJaxRS()));
+		sf.setResourceProvider(CustomerManagementJaxRS.class, new SingletonResourceProvider(new CustomerManagementJaxRS(repository)));
 		sf.setAddress("http://localhost:9000/");
 		sf.create();
 	}
