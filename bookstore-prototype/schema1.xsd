@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:complexType name="customer">
+    <xs:sequence>
+      <xs:element name="addresses" type="address" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="orders" type="order" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="address">
+    <xs:sequence>
+      <xs:element name="billing" type="xs:boolean"/>
+      <xs:element name="city" type="xs:string" minOccurs="0"/>
+      <xs:element name="door" type="xs:int"/>
+      <xs:element name="house" type="xs:int"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="other" type="xs:boolean"/>
+      <xs:element name="shipping" type="xs:boolean"/>
+      <xs:element name="street" type="xs:string" minOccurs="0"/>
+      <xs:element name="zipCode" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="order">
+    <xs:sequence>
+      <xs:element name="customer" type="customer" minOccurs="0"/>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="items" type="item" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="orderDate" type="xs:dateTime" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="item">
+    <xs:sequence>
+      <xs:element name="order" type="order" minOccurs="0"/>
+      <xs:element name="product" type="product" minOccurs="0"/>
+      <xs:element name="quantity" type="xs:int"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="product">
+    <xs:sequence>
+      <xs:element name="id" type="xs:string" minOccurs="0"/>
+      <xs:element name="items" type="item" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="singleUnitPrice" type="xs:decimal" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

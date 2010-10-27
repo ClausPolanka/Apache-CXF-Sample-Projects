@@ -1,5 +1,8 @@
 package bookstore;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement
 public class Item {
 	private int quantity;
 	private Order order;

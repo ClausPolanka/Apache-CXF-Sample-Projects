@@ -3,10 +3,27 @@ package bookstore;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlElements;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement
 public class Customer {
+	@XmlAttribute
 	private String id;
 	private String name;
+
+	@XmlElementWrapper
+	@XmlElements(@XmlElement(name = "address"))
 	private List<Address> addresses = new ArrayList<Address>();
+
+	@XmlElementWrapper
+	@XmlElements(@XmlElement(name = "order"))
 	private List<Order> orders = new ArrayList<Order>();
 
 	@SuppressWarnings("unused")
