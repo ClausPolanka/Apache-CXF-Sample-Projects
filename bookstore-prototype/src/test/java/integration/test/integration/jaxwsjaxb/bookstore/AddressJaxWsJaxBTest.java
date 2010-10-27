@@ -3,6 +3,7 @@ package test.integration.jaxwsjaxb.bookstore;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.AddressBuilder.anAddress;
+import static test.integration.jaxwsjaxb.bookstore.Foo.HOST;
 
 import javax.xml.ws.Endpoint;
 
@@ -17,14 +18,14 @@ import bookstore.Address;
 
 public class AddressJaxWsJaxBTest {
 
-	private static final String SERVICE_ENDPOINT = "http://localhost:9000/address";
-
-	private AddressTest addressService;
+	private static final String SERVICE_ENDPOINT = HOST + "address";
 
 	@BeforeClass
 	public static void publishAddressTestEndpoint() {
 		Endpoint.publish(SERVICE_ENDPOINT, new AddressTestImpl());
 	}
+
+	private AddressTest addressService;
 
 	@Before
 	public void createAddressServiceClient() {

@@ -18,6 +18,11 @@ public class ProductBuilder {
 		return new ProductBuilder();
 	}
 
+	public ProductBuilder withSingleUnitPrice(BigDecimal singleUnitPrice) {
+		this.singleUnitPrice = singleUnitPrice;
+		return this;
+	}
+
 	public ProductBuilder forItem(Item item) {
 		items.add(item);
 		return this;

@@ -7,8 +7,9 @@ import javax.jws.WebService;
 @WebService
 public interface Warehouse {
 
-	ProductAvailability checkAvailability(Product product, int quantity);
+	ProductAvailability checkAvailability(Product product, int amaount);
 
-	BigDecimal order(Product product, int quantity);
+	/** @return total price. */
+	BigDecimal order(Product product, int amount);
 
 }

@@ -2,8 +2,10 @@ package test.integration.jaxwsjaxb.bookstore;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItem;
+import static test.integration.jaxwsjaxb.bookstore.Foo.HOST;
 
 import javax.xml.ws.Endpoint;
 
@@ -18,7 +20,7 @@ import bookstore.Item;
 
 public class ItemJaxWsJaxBTest {
 
-	private static final String SERVICE_ENDPOINT = "http://localhost:9000/item";
+	private static final String SERVICE_ENDPOINT = HOST + "item";
 
 	private ItemTest itemService;
 
@@ -45,6 +47,6 @@ public class ItemJaxWsJaxBTest {
 
 		assertThat("Item Id", result.getQuantity(), equalTo(2));
 		assertThat("Item product", result.getProduct(), notNullValue());
-		assertThat("Item order", result.getOrder(), notNullValue());
+		assertThat("Item order", result.getOrder(), nullValue());
 	}
 }

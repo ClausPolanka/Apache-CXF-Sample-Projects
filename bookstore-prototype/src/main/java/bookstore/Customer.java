@@ -1,5 +1,6 @@
 package bookstore;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class Customer {
 	@XmlAttribute
 	private String id;
 	private String name;
+	private BigDecimal openBalance = new BigDecimal(0);
 
 	@XmlElementWrapper
 	@XmlElements(@XmlElement(name = "address"))
@@ -25,6 +27,7 @@ public class Customer {
 	@XmlElementWrapper
 	@XmlElements(@XmlElement(name = "order"))
 	private List<Order> orders = new ArrayList<Order>();
+	private String message;
 
 	@SuppressWarnings("unused")
 	private Customer() {
@@ -46,10 +49,6 @@ public class Customer {
 
 	public String getId() {
 		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
 	}
 
 	public String getName() {
@@ -76,4 +75,28 @@ public class Customer {
 		this.orders = orders;
 	}
 
+	public BigDecimal getOpenBalance() {
+		return openBalance;
+	}
+
+	public void setOpenBalance(BigDecimal openBalance) {
+		this.openBalance = openBalance;
+	}
+
+	public String getShippingAddress() {
+		for (Address each : addresses) {
+			if (each.isShipping()) {
+				return each.toString();
+			}
+		}
+		throw new RuntimeException("No Shipping Address found for customer: " + this);
+	}
+
+	public void notify(String message) {
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
+	}
 }

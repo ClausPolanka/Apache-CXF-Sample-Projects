@@ -1,7 +1,11 @@
 package test.bookstore.services;
 
+import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItem;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
+
+import java.math.BigDecimal;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -10,14 +14,24 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
+import bookstore.Customer;
 import bookstore.CustomerManagement;
 import bookstore.Item;
 import bookstore.Order;
+import bookstore.Product;
 import bookstore.ProductAvailability;
+import bookstore.ShippingService;
 import bookstore.Warehouse;
 import bookstore.services.BookstoreJaxWS;
 
 public class BookstoreJaxWSTest {
+
+	private static final BigDecimal NEW_OPEN_BALENCE = new BigDecimal(4);
+	private static final BigDecimal SINGLE_UNIT_PRICE = new BigDecimal(1);
+	private static final BigDecimal TOTAL_PRICE = new BigDecimal(1);
+	private static final int AMOUNT_1 = 1;
+	private static final boolean IS_AVAILABLE = true;
+	private static final int ESTIMATED_TIME_DELIVERY = 1;
 
 	@Rule
 	public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -28,51 +42,63 @@ public class BookstoreJaxWSTest {
 	@Mock
 	private Warehouse warehouse;
 
+	@Mock
+	private ShippingService shippingService;
+
 	private BookstoreJaxWS bookstoreService;
 
 	@Before
 	public void createBookStoreService() {
-		bookstoreService = new BookstoreJaxWS(customerService, warehouse);
+		bookstoreService = new BookstoreJaxWS(customerService, warehouse, shippingService);
 	}
 
 	@Test
 	public void orderExactlyOneProductFormWarehouse() {
-		final Item anItem = anItem().build();
-		final Order anOrder = anOrder().withItem(anItem).build();
+		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+		final Item anItem = anItem().ofProduct(aProduct).build();
+		final Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
+		final Order anOrder = anOrder().fromCustomer(aCustomer).withItem(anItem).build();
 
 		//@formatter:off
 		context.checking(new Expectations() {{
-			ignoring(customerService);
+			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
 
-			oneOf(warehouse).checkAvailability(anItem.getProduct(), anItem.getQuantity());
-			will(returnValue(new ProductAvailability(true, 1)));
+			oneOf(warehouse).checkAvailability(aProduct, AMOUNT_1); will(returnValue(availableInWarehouse()));
+			oneOf(warehouse).order(aProduct, AMOUNT_1); will(returnValue(TOTAL_PRICE));
 
-			oneOf(warehouse).order(anItem.getProduct(), anItem.getQuantity());
+			oneOf(shippingService).shipItems(new Item[] {anItem}, aCustomer.getShippingAddress());
+
+			oneOf(customerService).updateAccaount(aCustomer.getId(), NEW_OPEN_BALENCE);
+			oneOf(customerService).notify(aCustomer, "message");
         }});
 		//@formatter:on
 
 		bookstoreService.requestOrder(anOrder);
 	}
 
+	private ProductAvailability availableInWarehouse() {
+		return new ProductAvailability(IS_AVAILABLE, ESTIMATED_TIME_DELIVERY);
+	};
+
 	@Test
 	public void orderExactlyTwoProductsFormWarehouse() {
-		final Item anItem1 = anItem().build();
-		final Item anItem2 = anItem().build();
-		final Order anOrder = anOrder().withItem(anItem1).withItem(anItem2).build();
+		final Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
+		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+		final Item anItem1 = anItem().ofProduct(aProduct).build();
+		final Item anItem2 = anItem().ofProduct(aProduct).build();
+		final Order anOrder = anOrder().fromCustomer(aCustomer).withItem(anItem1).withItem(anItem2).build();
 
 		//@formatter:off
 		context.checking(new Expectations() {{
-			ignoring(customerService);
+			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
 
-			oneOf(warehouse).checkAvailability(anItem1.getProduct(), anItem1.getQuantity());
-			will(returnValue(new ProductAvailability(true, 1)));
+			allowing(warehouse).checkAvailability(aProduct, AMOUNT_1); will(returnValue(availableInWarehouse()));
+			allowing(warehouse).order(aProduct, AMOUNT_1); will(returnValue(TOTAL_PRICE));
 
-			oneOf(warehouse).order(anItem1.getProduct(), anItem1.getQuantity());
+			oneOf(shippingService).shipItems(new Item[] {anItem1, anItem2}, aCustomer.getShippingAddress());
 
-			oneOf(warehouse).checkAvailability(anItem2.getProduct(), anItem2.getQuantity());
-			will(returnValue(new ProductAvailability(true, 1)));
-
-			oneOf(warehouse).order(anItem2.getProduct(), anItem2.getQuantity());
+			oneOf(customerService).updateAccaount(aCustomer.getId(), NEW_OPEN_BALENCE);
+			oneOf(customerService).notify(aCustomer, "message");
 		}});
 		//@formatter:on
 

@@ -6,6 +6,7 @@ import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.AddressBuilder.anAddress;
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomer;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
+import static test.integration.jaxwsjaxb.bookstore.Foo.HOST;
 
 import javax.xml.ws.Endpoint;
 
@@ -20,7 +21,7 @@ import bookstore.Customer;
 
 public class CustomerJaxWSJaxBTest {
 
-	private static final String SERVICE_ENDPOINT = "http://localhost:9000/customer";
+	private static final String SERVICE_ENDPOINT = HOST + "customer";
 
 	private CustomerTest customerService;
 

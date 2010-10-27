@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
+import static test.integration.jaxwsjaxb.bookstore.Foo.HOST;
 
 import javax.xml.ws.Endpoint;
 
@@ -18,7 +19,7 @@ import bookstore.Order;
 
 public class OrderJaxWsJaxBTest {
 
-	private static final String SERVICE_ENDPOINT = "http://localhost:9000/order";
+	private static final String SERVICE_ENDPOINT = HOST + "order";
 
 	private OrderTest orderService;
 

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItem;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
+import static test.integration.jaxwsjaxb.bookstore.Foo.HOST;
 
 import java.math.BigDecimal;
 
@@ -21,7 +22,7 @@ import bookstore.Product;
 
 public class ProductJaxWsJaxBTest {
 
-	private static final String SERVICE_ENDPOINT = "http://localhost:9000/product";
+	private static final String SERVICE_ENDPOINT = HOST + "product";
 
 	private ProductTest productService;
 

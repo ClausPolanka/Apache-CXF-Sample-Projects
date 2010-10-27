@@ -1,7 +1,12 @@
 package bookstore;
 
+import java.util.UUID;
+
+import javax.jws.WebService;
+
+@WebService
 public interface ShippingService {
 
-	void shipItems(Item[] items, String string);
+	UUID shipItems(Item[] items, String customerShippingAddress);
 
 }

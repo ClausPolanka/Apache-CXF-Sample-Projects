@@ -1,6 +1,5 @@
 package test.endtoend.bookstore;
 
-import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -12,10 +11,12 @@ import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
 import bookstore.CustomerManagement;
+import bookstore.ShippingService;
 import bookstore.Warehouse;
 import bookstore.services.BookstoreJaxWS;
 import bookstore.services.CustomerManagementJaxRS;
 import bookstore.services.CustomerManagementJaxWS;
+import bookstore.services.ShippingServiceJaxWS;
 import bookstore.services.WarehouseJaxWS;
 
 public class FakeBookStoreServer {
@@ -25,8 +26,9 @@ public class FakeBookStoreServer {
 	public void startSellingProducts() {
 		Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS());
 		Endpoint.publish("http://localhost:9000/customermanagement", new CustomerManagementJaxWS());
+		Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWS());
 
-		bookstoreService = new BookstoreJaxWS(createCustomerService(), createWarehouse());
+		bookstoreService = new BookstoreJaxWS(createCustomerService(), createWarehouse(), createShippingService());
 		Endpoint.publish("http://localhost:9000/bookstore", bookstoreService);
 
 		publishJaxRSCustomerManagementService();
@@ -56,6 +58,13 @@ public class FakeBookStoreServer {
 		return (Warehouse) factory.create();
 	}
 
+	private ShippingService createShippingService() {
+		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+		factory.setServiceClass(ShippingService.class);
+		factory.setAddress("http://localhost:9000/shipping");
+		return (ShippingService) factory.create();
+	}
+
 	public void hasReceivedNewOrderRequest() {
 		// @formatter:off
 		assertThat("Customer after new order request",
@@ -64,22 +73,6 @@ public class FakeBookStoreServer {
 		assertThat("Order after new order request",
 				   bookstoreService.getOrder(),
 				   notNullValue());
-		// @formatter:on
-	}
-
-	public void queriesCustomer() {
-		// @formatter:off
-		assertThat("Customer queried via customer service",
-				   bookstoreService.getCustomer().getName(),
-				   equalTo("customer"));
-		// @formatter:on
-	}
-
-	public void hasReceivedAvailabilityInformationOfProductFromWarehouse() {
-		// @formatter:off
-		assertThat("Product available in warehouse",
-				   bookstoreService.isProductAvailableInWarehouse(),
-				   equalTo(true));
 		// @formatter:on
 	}
 }
