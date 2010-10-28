@@ -31,7 +31,7 @@ public class CustomerBuilder {
 		//@formatter:on
 	}
 
-	private CustomerBuilder withOpenBalance(BigDecimal openBalance) {
+	public CustomerBuilder withOpenBalance(BigDecimal openBalance) {
 		this.openBalance = openBalance;
 		return this;
 	}

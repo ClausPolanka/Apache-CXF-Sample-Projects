@@ -9,6 +9,7 @@ import bookstore.Item;
 import bookstore.Order;
 import bookstore.ProductAvailability;
 import bookstore.ShippingService;
+import bookstore.Supplier;
 import bookstore.Warehouse;
 
 public class BookstoreJaxWS implements Bookstore {
@@ -19,11 +20,13 @@ public class BookstoreJaxWS implements Bookstore {
 	private Warehouse warehouse;
 	private CustomerManagement customerService;
 	private ShippingService shippingService;
+	private Supplier supplier;
 
-	public BookstoreJaxWS(CustomerManagement customerService, Warehouse warehouse, ShippingService shippingService) {
+	public BookstoreJaxWS(CustomerManagement customerService, Warehouse warehouse, ShippingService shippingService, Supplier supplier) {
 		this.customerService = customerService;
 		this.warehouse = warehouse;
 		this.shippingService = shippingService;
+		this.supplier = supplier;
 	}
 
 	@Override
@@ -40,14 +43,22 @@ public class BookstoreJaxWS implements Bookstore {
 
 	private void order(Item anItem) {
 		if (availableInWarehouse(anItem)) {
-			totalPrice = totalPrice.add(orderFromWarehouse(anItem));
+			addToTotalPrice(orderFromWarehouse(anItem));
 		} else {
-			// TODO Order from Supplier.
+			addToTotalPrice(orderFromSupplier(anItem));
 		}
 	}
 
 	private BigDecimal orderFromWarehouse(Item anItem) {
 		return warehouse.order(anItem.getProduct(), anItem.getQuantity());
+	}
+
+	private void addToTotalPrice(BigDecimal price) {
+		totalPrice = totalPrice.add(price);
+	}
+
+	private BigDecimal orderFromSupplier(Item anItem) {
+		return supplier.order(anItem.getProduct(), anItem.getQuantity());
 	}
 
 	private boolean availableInWarehouse(Item anItem) {

@@ -35,13 +35,13 @@ public class WarehouseJaxWSTest {
 	public JUnitRuleMockery context = new JUnitRuleMockery();
 
 	@Mock
-	private BookstoreLibrary respository;
+	private BookstoreLibrary library;
 
 	private Warehouse warehouseService;
 
 	@Before
 	public void createWarehouse() {
-		warehouseService = new WarehouseJaxWS(respository);
+		warehouseService = new WarehouseJaxWS(library);
 	}
 
 	@Test
@@ -50,7 +50,7 @@ public class WarehouseJaxWSTest {
 
 		// @formatter:off
 		context.checking(new Expectations() {{
-			oneOf(respository).countProducts(aProduct.getId()); will(returnValue(AMOUNT_1));
+			oneOf(library).countProducts(aProduct.getId()); will(returnValue(AMOUNT_1));
 		}});
 		// @formatter:on
 
@@ -65,7 +65,7 @@ public class WarehouseJaxWSTest {
 
 		// @formatter:off
 		context.checking(new Expectations() {{
-			oneOf(respository).countProducts(aProduct.getId()); will(returnValue(NO_PRODUCTS));
+			oneOf(library).countProducts(aProduct.getId()); will(returnValue(NO_PRODUCTS));
 		}});
 		// @formatter:on
 
@@ -80,7 +80,7 @@ public class WarehouseJaxWSTest {
 
 		// @formatter:off
 		context.checking(new Expectations() {{
-			oneOf(respository).deleteProduct(aProduct);
+			oneOf(library).deleteProduct(aProduct);
 		}});
 		// @formatter:on
 
@@ -95,7 +95,7 @@ public class WarehouseJaxWSTest {
 
 		// @formatter:off
 		context.checking(new Expectations() {{
-			allowing(respository).deleteProduct(aProduct);
+			allowing(library).deleteProduct(aProduct);
 		}});
 		// @formatter:on
 

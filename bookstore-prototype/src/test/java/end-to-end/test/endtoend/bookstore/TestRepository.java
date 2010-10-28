@@ -98,6 +98,10 @@ public class TestRepository implements BookstoreLibrary {
 
 	@Override
 	public int countProducts(String id) {
-		return warehouseProducts.get(id).size();
+		List<Product> products = warehouseProducts.get(id);
+		if (products == null) {
+			return 0;
+		}
+		return products.size();
 	}
 }

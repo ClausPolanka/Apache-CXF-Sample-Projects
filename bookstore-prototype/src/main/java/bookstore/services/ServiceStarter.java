@@ -9,9 +9,7 @@ public class ServiceStarter {
 	}
 
 	private void provideServices() {
-		BookstoreJaxWS bookstore = new BookstoreJaxWS(new CustomerManagementJaxWS(), new WarehouseJaxWS(null), null);
-		String address = "http://localhost:9000/bookstore";
-		Endpoint.publish(address, bookstore);
+		Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWS());
 	}
 
 }

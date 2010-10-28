@@ -9,6 +9,7 @@ import bookstore.Product;
 
 public class ProductBuilder {
 
+	private static final String AVAILABLE_AT_SUPPLIER1 = "xyz";
 	private String id = "productId";
 	private String name = "product";
 	private BigDecimal singleUnitPrice = new BigDecimal(1);
@@ -16,6 +17,19 @@ public class ProductBuilder {
 
 	public static ProductBuilder aProduct() {
 		return new ProductBuilder();
+	}
+
+	public static Product aProductNotAvailableInWarehouse() {
+		// @formatter:off
+		return aProduct()
+			   .withProductId(AVAILABLE_AT_SUPPLIER1)
+			   .withSingleUnitPrice(new BigDecimal(2)).build();
+		// @formatter:on
+	}
+
+	public ProductBuilder withProductId(String id) {
+		this.id = id;
+		return this;
 	}
 
 	public ProductBuilder withSingleUnitPrice(BigDecimal singleUnitPrice) {

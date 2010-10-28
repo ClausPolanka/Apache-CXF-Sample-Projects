@@ -7,9 +7,9 @@ import javax.jws.WebService;
 
 //@formatter:off
 @WebService(serviceName = "SupplierService",
-			portName = "Supplier2PT",
+			portName = "SupplierPT",
 			targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/supplier")
-public interface Supplier2 {
+public interface Supplier {
 //@formatter:on
 
 	/** @return total price. */

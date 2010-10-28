@@ -1,22 +1,20 @@
 package test.endtoend.bookstore;
 
-import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
-import static test.endtoend.bookstore.builder.ItemBuilder.anItem;
-import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
-import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
+import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductNotavailAbleInWarehouse;
+import static test.endtoend.bookstore.builder.OrderBuilder.anOrderWithOneItem;
 
 import java.math.BigDecimal;
 
+import org.junit.After;
 import org.junit.Test;
 
 import bookstore.BookstoreLibrary;
-import bookstore.Item;
-import bookstore.Order;
 
 public class BookstoreEndToEndTest {
 
+	private static final BigDecimal NEW_BALANCE_OF_3 = new BigDecimal(3);
+	private static final BigDecimal NEW_BALANCE_OF_2 = new BigDecimal(4);
 	private static final String MESSAGE = "message";
-	private static final BigDecimal NEW_BALANCE = new BigDecimal(4);
 
 	private BookstoreLibrary repository = new TestRepository();
 	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(repository);
@@ -28,24 +26,23 @@ public class BookstoreEndToEndTest {
 		customer.orders(anOrderWithOneItem());
 		bookstoreServer.hasReceivedNewOrderRequest();
 		// bookstoreServer.ordersItem();
-		customer.hasReceivedUpdateForOpenBalance(NEW_BALANCE);
+		customer.hasReceivedUpdateForOpenBalance(NEW_BALANCE_OF_2);
 		customer.hasReceivedNotiyfication(MESSAGE);
 	}
 
-	private Order anOrderWithOneItem() {
-		//@formatter:off
-		return anOrder()
-				.fromCustomer(aCustomerWithAddressesAndOpenBalanceOfFive())
-				.withItem(anItemOfOneProduct()).build();
-		//@formatter:on
+	@Test
+	public void customerOrdersOneProductWhichWillBeProvidedBySupplierOneBecauseItIsNotAvailableInWarehouse() {
+		bookstoreServer.startSellingProducts();
+		customer.orders(anOrderOfAProductNotavailAbleInWarehouse());
+		bookstoreServer.hasReceivedNewOrderRequest();
+		// bookstoreServer.ordersItem();
+		customer.hasReceivedUpdateForOpenBalance(NEW_BALANCE_OF_3);
+		customer.hasReceivedNotiyfication(MESSAGE);
 	}
 
-	private Item anItemOfOneProduct() {
-		//@formatter:off
-		return anItem()
-				.ofQuantity(1)
-				.ofProduct(aProduct().build()).build();
-		//@formatter:on
+	@After
+	public void stopSelling() {
+		bookstoreServer.stopSellingProducts();
 	}
 
 }

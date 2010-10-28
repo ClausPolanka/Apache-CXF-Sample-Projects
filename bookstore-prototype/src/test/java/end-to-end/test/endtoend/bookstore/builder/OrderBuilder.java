@@ -1,6 +1,10 @@
 package test.endtoend.bookstore.builder;
 
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomer;
+import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
+import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductNotAvailableInWarehouse;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,6 +22,32 @@ public class OrderBuilder {
 
 	public static OrderBuilder anOrder() {
 		return new OrderBuilder();
+	}
+
+	public static Order anOrderWithOneItem() {
+		//@formatter:off
+		return anOrder()
+				.fromCustomer(aCustomerWithAddressesAndOpenBalanceOfFive())
+				.withItem(anItemOfOneProduct(aProduct().build())).build();
+		//@formatter:on
+	}
+
+	public static Order anOrderOfAProductNotavailAbleInWarehouse() {
+		//@formatter:off
+		return anOrder()
+				.fromCustomer(aCustomerWithAddressesAndOpenBalanceOfFive())
+				.withItem(anItemOfOneProduct(aProductNotAvailableInWarehouse()))
+				.build();
+		//@formatter:on
+	}
+
+	public static Order anOrderOfAProductNotavailAbleInWarehouse(Customer aCustomer) {
+		//@formatter:off
+		return anOrder()
+		.fromCustomer(aCustomer)
+		.withItem(anItemOfOneProduct(aProductNotAvailableInWarehouse()))
+		.build();
+		//@formatter:on
 	}
 
 	public OrderBuilder fromCustomer(Customer customer) {

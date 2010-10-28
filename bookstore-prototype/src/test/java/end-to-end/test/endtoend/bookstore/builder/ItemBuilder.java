@@ -16,6 +16,14 @@ public class ItemBuilder {
 		return new ItemBuilder();
 	}
 
+	public static Item anItemOfOneProduct(Product aProduct) {
+		//@formatter:off
+		return anItem()
+				.ofQuantity(1)
+				.ofProduct(aProduct).build();
+		//@formatter:on
+	}
+
 	public ItemBuilder ofQuantity(int quantity) {
 		this.quantity = quantity;
 		return this;
