@@ -34,7 +34,7 @@ public class BookstoreJaxWS implements Bookstore {
 			order(each);
 		}
 		shippingService.shipItems(itemsToArry(anOrder), aCustomer.getShippingAddress());
-		customerService.updateAccaount(aCustomer.getId(), newCustomerBalance());
+		customerService.updateAccount(aCustomer.getId(), newCustomerBalance());
 		customerService.notify(aCustomer, "message");
 	}
 

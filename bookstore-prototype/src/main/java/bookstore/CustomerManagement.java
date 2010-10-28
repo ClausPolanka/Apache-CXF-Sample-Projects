@@ -15,7 +15,7 @@ public interface CustomerManagement {
 
 	void updateCustomer(Customer customer);
 
-	void updateAccaount(String id, BigDecimal balance);
+	void updateAccount(String id, BigDecimal balance);
 
 	void notify(Customer customer, String message);
 

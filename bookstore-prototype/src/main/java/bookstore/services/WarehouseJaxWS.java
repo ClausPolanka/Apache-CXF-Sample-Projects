@@ -2,7 +2,7 @@ package bookstore.services;
 
 import java.math.BigDecimal;
 
-import bookstore.BookstoreRepository;
+import bookstore.BookstoreLibrary;
 import bookstore.Product;
 import bookstore.ProductAvailability;
 import bookstore.Warehouse;
@@ -11,10 +11,10 @@ public class WarehouseJaxWS implements Warehouse {
 	private static final boolean AVAILABLE = true;
 	private static final boolean NOT_AVAILABLE = false;
 
-	private BookstoreRepository repository;
+	private BookstoreLibrary library;
 
-	public WarehouseJaxWS(BookstoreRepository repository) {
-		this.repository = repository;
+	public WarehouseJaxWS(BookstoreLibrary library) {
+		this.library = library;
 	}
 
 	@Override
@@ -26,13 +26,13 @@ public class WarehouseJaxWS implements Warehouse {
 	}
 
 	private int countOf(Product product) {
-		return repository.countProducts(product.getId());
+		return library.countProducts(product.getId());
 	}
 
 	@Override
 	public BigDecimal order(Product product, int amount) {
 		for (int i = 0; i < amount; i++) {
-			repository.deleteProduct(product);
+			library.deleteProduct(product);
 		}
 		return new BigDecimal(amount).multiply(product.getSingleUnitPrice());
 	}

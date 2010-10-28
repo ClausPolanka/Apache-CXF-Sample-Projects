@@ -2,7 +2,7 @@ package bookstore;
 
 import java.math.BigDecimal;
 
-public interface BookstoreRepository {
+public interface BookstoreLibrary {
 
 	void addCustomer(Customer customer);
 

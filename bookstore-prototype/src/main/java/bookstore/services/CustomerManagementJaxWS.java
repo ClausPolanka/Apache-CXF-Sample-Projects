@@ -28,7 +28,7 @@ public class CustomerManagementJaxWS implements CustomerManagement {
 	}
 
 	@Override
-	public void updateAccaount(String id, BigDecimal balance) {
+	public void updateAccount(String id, BigDecimal balance) {
 		webClient().path(MAIN_PATH + id + "/account/").put(balance);
 	}
 

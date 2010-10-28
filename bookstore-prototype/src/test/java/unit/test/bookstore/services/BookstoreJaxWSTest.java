@@ -68,7 +68,7 @@ public class BookstoreJaxWSTest {
 
 			oneOf(shippingService).shipItems(new Item[] {anItem}, aCustomer.getShippingAddress());
 
-			oneOf(customerService).updateAccaount(aCustomer.getId(), NEW_BALENCE_4);
+			oneOf(customerService).updateAccount(aCustomer.getId(), NEW_BALENCE_4);
 			oneOf(customerService).notify(aCustomer, "message");
         }});
 		//@formatter:on
@@ -101,7 +101,7 @@ public class BookstoreJaxWSTest {
 
 			oneOf(shippingService).shipItems(new Item[] {anItem1, anItem2}, aCustomer.getShippingAddress());
 
-			oneOf(customerService).updateAccaount(aCustomer.getId(), NEW_BALANCE_3);
+			oneOf(customerService).updateAccount(aCustomer.getId(), NEW_BALANCE_3);
 			oneOf(customerService).notify(aCustomer, "message");
 		}});
 		//@formatter:on

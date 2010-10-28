@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 import org.junit.Test;
 
-import bookstore.BookstoreRepository;
+import bookstore.BookstoreLibrary;
 import bookstore.Item;
 import bookstore.Order;
 
@@ -18,7 +18,7 @@ public class BookstoreEndToEndTest {
 	private static final String MESSAGE = "message";
 	private static final BigDecimal NEW_BALANCE = new BigDecimal(4);
 
-	private BookstoreRepository repository = new TestRepository();
+	private BookstoreLibrary repository = new TestRepository();
 	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(repository);
 	private final ApplicationClient customer = new ApplicationClient(repository);
 

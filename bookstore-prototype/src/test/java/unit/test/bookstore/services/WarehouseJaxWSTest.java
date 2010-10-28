@@ -14,7 +14,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 
-import bookstore.BookstoreRepository;
+import bookstore.BookstoreLibrary;
 import bookstore.Product;
 import bookstore.ProductAvailability;
 import bookstore.Warehouse;
@@ -35,7 +35,7 @@ public class WarehouseJaxWSTest {
 	public JUnitRuleMockery context = new JUnitRuleMockery();
 
 	@Mock
-	private BookstoreRepository respository;
+	private BookstoreLibrary respository;
 
 	private Warehouse warehouseService;
 

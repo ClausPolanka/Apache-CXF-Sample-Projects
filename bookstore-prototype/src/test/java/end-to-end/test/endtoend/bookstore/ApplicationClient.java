@@ -9,16 +9,16 @@ import java.math.BigDecimal;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
 import bookstore.Bookstore;
-import bookstore.BookstoreRepository;
+import bookstore.BookstoreLibrary;
 import bookstore.Customer;
 import bookstore.Order;
 
 public class ApplicationClient {
 
 	private Customer customer;
-	private BookstoreRepository repository;
+	private BookstoreLibrary repository;
 
-	public ApplicationClient(BookstoreRepository repository) {
+	public ApplicationClient(BookstoreLibrary repository) {
 		this.repository = repository;
 	}
 

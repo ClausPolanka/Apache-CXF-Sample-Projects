@@ -9,16 +9,16 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 
-import bookstore.BookstoreRepository;
+import bookstore.BookstoreLibrary;
 import bookstore.Customer;
 import bookstore.CustomerManagement;
 
 @Path("/customerservice/")
 public class CustomerManagementJaxRS implements CustomerManagement {
 
-	private BookstoreRepository database;
+	private BookstoreLibrary database;
 
-	public CustomerManagementJaxRS(BookstoreRepository database) {
+	public CustomerManagementJaxRS(BookstoreLibrary database) {
 		this.database = database;
 	}
 
@@ -54,7 +54,7 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 	@PUT
 	@Path("/customers/{id}/account")
 	@Override
-	public void updateAccaount(@PathParam("id") String id, BigDecimal balance) {
+	public void updateAccount(@PathParam("id") String id, BigDecimal balance) {
 		database.updateAccount(database.getCustomer(id), balance);
 	}
 

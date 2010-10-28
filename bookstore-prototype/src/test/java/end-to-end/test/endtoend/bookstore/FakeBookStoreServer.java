@@ -10,7 +10,7 @@ import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
 import org.apache.cxf.jaxrs.lifecycle.SingletonResourceProvider;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
-import bookstore.BookstoreRepository;
+import bookstore.BookstoreLibrary;
 import bookstore.CustomerManagement;
 import bookstore.ShippingService;
 import bookstore.Warehouse;
@@ -23,13 +23,16 @@ import bookstore.services.WarehouseJaxWS;
 public class FakeBookStoreServer {
 
 	private BookstoreJaxWS bookstoreService;
-	private BookstoreRepository repository;
+	private BookstoreLibrary repository;
 
-	public FakeBookStoreServer(BookstoreRepository repository) {
+	public FakeBookStoreServer(BookstoreLibrary repository) {
 		this.repository = repository;
 	}
 
 	public void startSellingProducts() {
+		// @formatter:off
+		// TODO Extract publishing to ServiceStarte within an explicit call of main-method in a separate thread as deamon-thread.
+		// @formatter:on
 		Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS(repository));
 		Endpoint.publish("http://localhost:9000/customermanagement", new CustomerManagementJaxWS());
 		Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWS());

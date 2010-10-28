@@ -9,14 +9,27 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import bookstore.BookstoreRepository;
+import bookstore.BookstoreLibrary;
 import bookstore.Customer;
 import bookstore.Product;
 
-public class TestRepository implements BookstoreRepository {
+public class TestRepository implements BookstoreLibrary {
+
+	private class ProductInformation {
+		ProductInformation(String id, boolean isAvailable, int deliveryTimeInDays) {
+			this.id = id;
+			this.isAvailable = isAvailable;
+			this.deliveryTimeInDays = deliveryTimeInDays;
+		}
+
+		String id;
+		boolean isAvailable;
+		int deliveryTimeInDays;
+	}
 
 	private Map<String, Customer> customers = new HashMap<String, Customer>();
 	private Map<String, List<Product>> warehouseProducts = new HashMap<String, List<Product>>();
+	private Map<String, ProductInformation> warehouseProductInformation = new HashMap<String, ProductInformation>();
 
 	public TestRepository() {
 		createTestCustomers();
@@ -34,6 +47,7 @@ public class TestRepository implements BookstoreRepository {
 		products.add(aProduct);
 		products.add(aProduct);
 		warehouseProducts.put(aProduct.getId(), products);
+		warehouseProductInformation.put(aProduct.getId(), new ProductInformation(aProduct.getId(), true, 1));
 	}
 
 	@Override
@@ -79,7 +93,7 @@ public class TestRepository implements BookstoreRepository {
 	@Override
 	public void deleteProduct(Product aProduct) {
 		List<Product> products = warehouseProducts.get(aProduct.getId());
-		// TODO Implement
+		// TODO Implement delete Product
 	}
 
 	@Override
