@@ -18,4 +18,6 @@ public interface BookstoreLibrary {
 
 	int countProducts(String id);
 
+	String getSupplierAddressFor(String productId);
+
 }

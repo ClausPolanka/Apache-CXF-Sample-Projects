@@ -5,6 +5,7 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java/integration"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java/unit"/>
 	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" path="src/main/gen"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/develop/hamcrest-all-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/develop/junit-dep-4.8.1.jar" sourcepath="C:/Dev/Src/Workspaces/Eclipse/Helios/jee/Apache-CXF-Sample-Projects/bookstore-prototype/lib/develop/junit-dep-4.8.1-sources.jar"/>

@@ -1,5 +1,7 @@
 <project name="bookstore-prototype" default="build">
 	<property name="src.dir" location="src/main/java" />
+	<property name="src.gen.dir" location="src/main/gen" />
+	<property name="resources.dir" location="src/main/resources" />
 	<property name="build.dir" location="target" />
 	<property name="app.classes.dir" location="${build.dir}/classes" />
 	<property name="test.classes.dir" location="${build.dir}/test-classes" />
@@ -18,9 +20,15 @@
 
 	<target name="clean">
 		<delete dir="${build.dir}" quiet="true" />
+		<delete dir="${src.gen.dir}" quiet="true" />
 	</target>
 
-	<target name="app.compile">
+	<target name="gen.compile" depends="generate">
+		<mkdir dir="${app.classes.dir}" />
+		<javac destdir="${app.classes.dir}" srcdir="${src.gen.dir}" classpathref="app.lib.path" debug="on" includeantruntime="no" />
+	</target>
+
+	<target name="app.compile" depends="gen.compile">
 		<property name="app.src.dir" location="${src.dir}" />
 		<mkdir dir="${app.classes.dir}" />
 		<javac destdir="${app.classes.dir}" srcdir="${app.src.dir}" classpathref="app.lib.path" debug="on" includeantruntime="no" />
@@ -77,6 +85,17 @@
 		</junit>
 	</target>
 
-	<target name="test.run" description="Run the tests" depends="unittest.run, integrationtest.run, endtoendtest.run"/>
+	<target name="test.run" description="Run the tests" depends="unittest.run, integrationtest.run, endtoendtest.run" />
 	<target name="build" description="Clean, build, and full test" depends="clean, test.run" />
+
+	<taskdef name="xjc" classname="com.sun.tools.xjc.XJCTask">
+		<classpath>
+			<path refid="app.lib.path" />
+		</classpath>
+	</taskdef>
+	<target name="generate">
+		<mkdir dir="${src.gen.dir}" />
+		<xjc schema="${resources.dir}/addressing.xsd" destdir="${src.gen.dir}" />
+	</target>
+
 </project>

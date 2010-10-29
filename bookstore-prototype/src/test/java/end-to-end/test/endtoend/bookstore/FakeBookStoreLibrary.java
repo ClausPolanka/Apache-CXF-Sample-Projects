@@ -13,7 +13,7 @@ import bookstore.BookstoreLibrary;
 import bookstore.Customer;
 import bookstore.Product;
 
-public class TestRepository implements BookstoreLibrary {
+public class FakeBookStoreLibrary implements BookstoreLibrary {
 
 	private class ProductInformation {
 		ProductInformation(String id, boolean isAvailable, int deliveryTimeInDays) {
@@ -30,10 +30,12 @@ public class TestRepository implements BookstoreLibrary {
 	private Map<String, Customer> customers = new HashMap<String, Customer>();
 	private Map<String, List<Product>> warehouseProducts = new HashMap<String, List<Product>>();
 	private Map<String, ProductInformation> warehouseProductInformation = new HashMap<String, ProductInformation>();
+	private Map<String, String> supplierAddressesForProducts = new HashMap<String, String>();
 
-	public TestRepository() {
+	public FakeBookStoreLibrary() {
 		createTestCustomers();
 		createTestProdcutsForWarehouse();
+		createProductsForSuppliers();
 	}
 
 	void createTestCustomers() {
@@ -48,6 +50,10 @@ public class TestRepository implements BookstoreLibrary {
 		products.add(aProduct);
 		warehouseProducts.put(aProduct.getId(), products);
 		warehouseProductInformation.put(aProduct.getId(), new ProductInformation(aProduct.getId(), true, 1));
+	}
+
+	private void createProductsForSuppliers() {
+		supplierAddressesForProducts.put("productId", "http://localhost:9000/supplieraustria");
 	}
 
 	@Override
@@ -103,5 +109,10 @@ public class TestRepository implements BookstoreLibrary {
 			return 0;
 		}
 		return products.size();
+	}
+
+	@Override
+	public String getSupplierAddressFor(String productId) {
+		return supplierAddressesForProducts.get(productId);
 	}
 }

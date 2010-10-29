@@ -43,9 +43,9 @@ public class BookstoreJaxWS implements Bookstore {
 
 	private void order(Item anItem) {
 		if (availableInWarehouse(anItem)) {
-			addToTotalPrice(orderFromWarehouse(anItem));
+			addToTotalPriceOf(orderFromWarehouse(anItem));
 		} else {
-			addToTotalPrice(orderFromSupplier(anItem));
+			addToTotalPriceOf(orderFromSupplier(anItem));
 		}
 	}
 
@@ -53,7 +53,7 @@ public class BookstoreJaxWS implements Bookstore {
 		return warehouse.order(anItem.getProduct(), anItem.getQuantity());
 	}
 
-	private void addToTotalPrice(BigDecimal price) {
+	private void addToTotalPriceOf(BigDecimal price) {
 		totalPrice = totalPrice.add(price);
 	}
 

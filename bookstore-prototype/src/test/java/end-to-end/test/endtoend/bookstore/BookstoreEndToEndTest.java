@@ -16,7 +16,7 @@ public class BookstoreEndToEndTest {
 	private static final BigDecimal NEW_BALANCE_OF_2 = new BigDecimal(4);
 	private static final String MESSAGE = "message";
 
-	private BookstoreLibrary repository = new TestRepository();
+	private BookstoreLibrary repository = new FakeBookStoreLibrary();
 	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(repository);
 	private final ApplicationClient customer = new ApplicationClient(repository);
 
