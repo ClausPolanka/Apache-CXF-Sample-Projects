@@ -2,26 +2,41 @@ package bookstore.services;
 
 import java.math.BigDecimal;
 
+import javax.jws.WebService;
+
+import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.xmlsoap.schemas.ws._2004._08.addressing.EndpointReferenceType;
 
 import bookstore.Product;
 import bookstore.Supplier;
 import bookstore.SupplierRegistry;
 
+// @formatter:off
+@WebService(endpointInterface = "bookstore.Supplier",
+	    	serviceName = "SupplierFacade",
+	        targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/supplier",
+	        portName = "SupplierPT")
 public class SupplierFacadeJaxWs implements Supplier {
-
+// @formatter:on
 	private SupplierRegistry registry;
-	private ServiceInvoker invoker;
 
-	public SupplierFacadeJaxWs(SupplierRegistry registry, ServiceInvoker invoker) {
+	public SupplierFacadeJaxWs(SupplierRegistry registry) {
 		this.registry = registry;
-		this.invoker = invoker;
 	}
 
 	@Override
-	public BigDecimal order(Product product, int amount) {
-		EndpointReferenceType endPoint = registry.getAddressFromSupplierFor(product);
-		Supplier supplier = invoker.invoke(endPoint.getAddress().getValue(), Supplier.class);
-		return supplier.order(product, amount);
+	public BigDecimal order(Product aProduct, int amount) {
+		EndpointReferenceType endPoint = registry.getAddressFromSupplierFor(aProduct);
+		Supplier supplier = createSupplierProxyFor(endPoint.getAddress().getValue());
+		return supplier.order(aProduct, amount);
+	}
+
+	// Public for testing purposes. Would be great to extract generic
+	// SOAP-Service.
+	public Supplier createSupplierProxyFor(String serviceAddress) {
+		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+		factory.setServiceClass(Supplier.class);
+		factory.setAddress(serviceAddress);
+		return (Supplier) factory.create();
 	}
 }

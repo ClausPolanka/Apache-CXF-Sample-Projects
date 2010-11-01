@@ -18,33 +18,40 @@ import bookstore.BookstoreLibrary;
 import bookstore.CustomerManagement;
 import bookstore.ShippingService;
 import bookstore.Supplier;
+import bookstore.SupplierRegistry;
 import bookstore.Warehouse;
+import bookstore.services.AustriaSupplierJaxWs;
 import bookstore.services.BookstoreJaxWS;
 import bookstore.services.CustomerManagementJaxRS;
 import bookstore.services.CustomerManagementJaxWS;
 import bookstore.services.ShippingServiceJaxWS;
+import bookstore.services.SupplierFacadeJaxWs;
+import bookstore.services.SupplierRegistryJaxWs;
 import bookstore.services.WarehouseJaxWS;
 
 public class FakeBookStoreServer {
 
 	private BookstoreJaxWS bookstoreService;
-	private BookstoreLibrary repository;
+	private BookstoreLibrary library;
 	private List<Endpoint> endpoints = new ArrayList<Endpoint>();
 	private Server jaxRsServer;
 
-	public FakeBookStoreServer(BookstoreLibrary repository) {
-		this.repository = repository;
+	public FakeBookStoreServer(BookstoreLibrary library) {
+		this.library = library;
 	}
 
 	public void startSellingProducts() {
 		// @formatter:off
-		// TODO Extract publishing to ServiceStarte within an explicit call of main-method in a separate thread as deamon-thread.
+		// TODO Extract publishing to ServiceStarter within an explicit call of main-method in a separate thread as deamon-thread.
 		// @formatter:on
-		endpoints.add(Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS(repository)));
+		endpoints.add(Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS(library)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/customermanagement", new CustomerManagementJaxWS()));
 		endpoints.add(Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWS()));
+		endpoints.add(Endpoint.publish("http://localhost:9000/registry", new SupplierRegistryJaxWs(library)));
+		endpoints.add(Endpoint.publish("http://localhost:9000/supplierfacade", new SupplierFacadeJaxWs(createRegistry())));
+		endpoints.add(Endpoint.publish("http://localhost:9000/austriasupplier", new AustriaSupplierJaxWs(library)));
 
-		bookstoreService = new BookstoreJaxWS(createCustomerService(), createWarehouse(), createShippingService(), createSupplier());
+		bookstoreService = new BookstoreJaxWS(createCustomerService(), createWarehouse(), createShippingService(), createSupplierFacade());
 		endpoints.add(Endpoint.publish("http://localhost:9000/bookstore", bookstoreService));
 
 		publishJaxRSCustomerManagementService();
@@ -52,12 +59,11 @@ public class FakeBookStoreServer {
 		assertThat("Order bevore new request", bookstoreService.getOrder(), nullValue());
 	}
 
-	private void publishJaxRSCustomerManagementService() {
-		JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
-		sf.setResourceClasses(CustomerManagementJaxRS.class);
-		sf.setResourceProvider(CustomerManagementJaxRS.class, new SingletonResourceProvider(new CustomerManagementJaxRS(repository)));
-		sf.setAddress("http://localhost:9000/");
-		jaxRsServer = sf.create();
+	private SupplierRegistry createRegistry() {
+		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
+		factory.setServiceClass(SupplierRegistry.class);
+		factory.setAddress("http://localhost:9000/registry");
+		return (SupplierRegistry) factory.create();
 	}
 
 	private CustomerManagement createCustomerService() {
@@ -81,11 +87,19 @@ public class FakeBookStoreServer {
 		return (ShippingService) factory.create();
 	}
 
-	private Supplier createSupplier() {
+	private Supplier createSupplierFacade() {
 		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
 		factory.setServiceClass(Supplier.class);
-		factory.setAddress("http://localhost:9000/supplier");
+		factory.setAddress("http://localhost:9000/supplierfacade");
 		return (Supplier) factory.create();
+	}
+
+	private void publishJaxRSCustomerManagementService() {
+		JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
+		sf.setResourceClasses(CustomerManagementJaxRS.class);
+		sf.setResourceProvider(CustomerManagementJaxRS.class, new SingletonResourceProvider(new CustomerManagementJaxRS(library)));
+		sf.setAddress("http://localhost:9000/");
+		jaxRsServer = sf.create();
 	}
 
 	public void hasReceivedNewOrderRequest() {

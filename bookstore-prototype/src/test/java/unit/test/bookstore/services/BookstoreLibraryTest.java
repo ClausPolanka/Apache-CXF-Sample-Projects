@@ -15,7 +15,7 @@ import bookstore.BookstoreLibrary;
 import bookstore.Product;
 
 public class BookstoreLibraryTest {
-	private static final String SUPPLIER_ADDRESS = "http://localhost:9000/supplieraustria";
+	private static final String SUPPLIER_ADDRESS = "http://localhost:9000/austriasupplier";
 	private static final String PRODUCT_ID = "productId";
 
 	@Rule

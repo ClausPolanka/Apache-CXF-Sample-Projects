@@ -9,7 +9,7 @@ import bookstore.Customer;
 public class CustomerJaxBTest {
 
 	@Test
-	public void testname() throws Exception {
+	public void printOutXmlSchemaForCustomer() throws Exception {
 		JAXBContext ctx = JAXBContext.newInstance(Customer.class);
 		ctx.generateSchema(new SystemOutSchemaOutput());
 	}

@@ -31,6 +31,7 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	private Map<String, List<Product>> warehouseProducts = new HashMap<String, List<Product>>();
 	private Map<String, ProductInformation> warehouseProductInformation = new HashMap<String, ProductInformation>();
 	private Map<String, String> supplierAddressesForProducts = new HashMap<String, String>();
+	private Map<String, List<Product>> supplierAustria = new HashMap<String, List<Product>>();
 
 	public FakeBookStoreLibrary() {
 		createTestCustomers();
@@ -53,7 +54,19 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	}
 
 	private void createProductsForSuppliers() {
-		supplierAddressesForProducts.put("productId", "http://localhost:9000/supplieraustria");
+		supplierAddressesForProducts.put("productId", "http://localhost:9000/austriasupplier");
+		supplierAddressesForProducts.put("xyz", "http://localhost:9000/austriasupplier");
+
+		ArrayList<Product> productsAustria = new ArrayList<Product>();
+		Product aProduct = aProduct().withProductId("xyz").build();
+		productsAustria.add(aProduct);
+		productsAustria.add(aProduct);
+
+		productsAustria = new ArrayList<Product>();
+		aProduct = aProduct().withProductId("productId").build();
+		productsAustria.add(aProduct);
+		productsAustria.add(aProduct);
+		supplierAustria.put(aProduct.getId(), productsAustria);
 	}
 
 	@Override
@@ -114,5 +127,14 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	@Override
 	public String getSupplierAddressFor(String productId) {
 		return supplierAddressesForProducts.get(productId);
+	}
+
+	@Override
+	public void getFromAustriaSupplier(String productId) {
+		List<Product> products = supplierAustria.get(productId);
+		if (products == null) {
+			return;
+		}
+		products.remove(0);
 	}
 }

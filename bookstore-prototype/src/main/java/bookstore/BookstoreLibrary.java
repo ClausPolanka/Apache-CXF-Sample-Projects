@@ -20,4 +20,6 @@ public interface BookstoreLibrary {
 
 	String getSupplierAddressFor(String productId);
 
+	void getFromAustriaSupplier(String id);
+
 }

@@ -19,6 +19,7 @@ import bookstore.SupplierRegistry;
 import bookstore.services.SupplierRegistryJaxWs;
 
 public class SupplierRegistryJaxWsTest {
+	private static final String PRODUCT_ID = "xyz";
 	private static final String EMPTY_ADDRESS = "";
 	private static final String ADDRESS = "http://localhist:9000/supplieraustria";
 	@Rule
@@ -35,11 +36,11 @@ public class SupplierRegistryJaxWsTest {
 
 	@Test
 	public void provideAddressOfSupplierForAGivenProduct() {
-		final Product aProduct = aProduct().withProductId("xyz").build();
+		final Product aProduct = aProduct().withProductId(PRODUCT_ID).build();
 
 		//@formatter:off
 		context.checking(new Expectations() {{
-			oneOf(library).getSupplierAddressFor(aProduct.getId()); will(returnValue(ADDRESS));
+			oneOf(library).getSupplierAddressFor(PRODUCT_ID); will(returnValue(ADDRESS));
 		}});
 		//@formatter:on
 
@@ -49,11 +50,11 @@ public class SupplierRegistryJaxWsTest {
 
 	@Test(expected = RuntimeException.class)
 	public void reportErrorBecauseGivenProductIsUnknown() {
-		final Product aProduct = aProduct().withProductId("xyz").build();
+		final Product aProduct = aProduct().withProductId(PRODUCT_ID).build();
 
 		//@formatter:off
 		context.checking(new Expectations() {{
-			oneOf(library).getSupplierAddressFor(aProduct.getId()); will(returnValue(EMPTY_ADDRESS));
+			oneOf(library).getSupplierAddressFor(PRODUCT_ID); will(returnValue(EMPTY_ADDRESS));
 		}});
 		//@formatter:on
 

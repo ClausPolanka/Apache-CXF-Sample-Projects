@@ -19,7 +19,6 @@ import org.xmlsoap.schemas.ws._2004._08.addressing.EndpointReferenceType;
 import bookstore.Product;
 import bookstore.Supplier;
 import bookstore.SupplierRegistry;
-import bookstore.services.ServiceInvoker;
 import bookstore.services.SupplierFacadeJaxWs;
 
 public class SupplierFacadeJaxWSTest {
@@ -31,14 +30,17 @@ public class SupplierFacadeJaxWSTest {
 	public JUnitRuleMockery context = new JUnitRuleMockery();
 	@Mock
 	private SupplierRegistry registry;
-	@Mock
-	private ServiceInvoker invoker;
 
 	private Supplier supplier;
 
 	@Before
 	public void createSupplier() {
-		supplier = new SupplierFacadeJaxWs(registry, invoker);
+		supplier = new SupplierFacadeJaxWs(registry) {
+			@Override
+			public Supplier createSupplierProxyFor(String address) {
+				return aDummySupplier();
+			}
+		};
 	}
 
 	@Test
@@ -51,7 +53,6 @@ public class SupplierFacadeJaxWSTest {
 
 		context.checking(new Expectations() {{
 			oneOf(registry).getAddressFromSupplierFor(aProduct); will(returnValue(anEndpoint));
-			oneOf(invoker).invoke(anEndpoint.getAddress().getValue(), Supplier.class); will(returnValue(aDummySupplier()));
 		}});
 		//@formatter:on
 
