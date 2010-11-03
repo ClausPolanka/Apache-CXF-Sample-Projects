@@ -25,17 +25,15 @@ public class BookstoreEndToEndTest {
 		bookstoreServer.startSellingProducts();
 		customer.orders(anOrderWithOneItem());
 		bookstoreServer.hasReceivedNewOrderRequest();
-		// bookstoreServer.ordersItem();
 		customer.hasReceivedUpdateForOpenBalance(NEW_BALANCE_OF_2);
 		customer.hasReceivedNotiyfication(MESSAGE);
 	}
 
 	@Test
-	public void customerOrdersOneProductWhichWillBeProvidedBySupplierOneBecauseItIsNotAvailableInWarehouse() {
+	public void customerOrdersOneProductWhichWillBeProvidedByAustriaSupplierBecauseItIsNotAvailableInWarehouse() {
 		bookstoreServer.startSellingProducts();
 		customer.orders(anOrderOfAProductNotavailAbleInWarehouse());
 		bookstoreServer.hasReceivedNewOrderRequest();
-		// bookstoreServer.ordersItem();
 		customer.hasReceivedUpdateForOpenBalance(NEW_BALANCE_OF_3);
 		customer.hasReceivedNotiyfication(MESSAGE);
 	}
