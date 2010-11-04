@@ -2,6 +2,8 @@ package test.endtoend.bookstore;
 
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByAustriaSupplier;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByGermanSupplier;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	private Map<String, ProductInformation> warehouseProductInformation = new HashMap<String, ProductInformation>();
 	private Map<String, String> supplierAddressesForProducts = new HashMap<String, String>();
 	private Map<String, List<Product>> supplierAustria = new HashMap<String, List<Product>>();
+	private Map<String, List<Product>> supplierGermany = new HashMap<String, List<Product>>();
 
 	public FakeBookStoreLibrary() {
 		createTestCustomers();
@@ -56,11 +59,19 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	private void createProductsForSuppliers() {
 		supplierAddressesForProducts.put("productId", "http://localhost:9000/austriasupplier");
 		supplierAddressesForProducts.put("xyz", "http://localhost:9000/austriasupplier");
+		supplierAddressesForProducts.put("abc", "http://localhost:9000/germansupplier");
+
+		ArrayList<Product> productsGermany = new ArrayList<Product>();
+		Product aProduct = aProductProvidedByGermanSupplier();
+		productsGermany.add(aProduct);
+		productsGermany.add(aProduct);
+		supplierGermany.put(aProduct.getId(), productsGermany);
 
 		ArrayList<Product> productsAustria = new ArrayList<Product>();
-		Product aProduct = aProduct().withProductId("xyz").build();
+		aProduct = aProductProvidedByAustriaSupplier();
 		productsAustria.add(aProduct);
 		productsAustria.add(aProduct);
+		supplierAustria.put(aProduct.getId(), productsAustria);
 
 		productsAustria = new ArrayList<Product>();
 		aProduct = aProduct().withProductId("productId").build();
@@ -132,6 +143,15 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	@Override
 	public void getFromAustriaSupplier(String productId) {
 		List<Product> products = supplierAustria.get(productId);
+		if (products == null) {
+			return;
+		}
+		products.remove(0);
+	}
+
+	@Override
+	public void getFromGermanSupplier(String productId) {
+		List<Product> products = supplierGermany.get(productId);
 		if (products == null) {
 			return;
 		}

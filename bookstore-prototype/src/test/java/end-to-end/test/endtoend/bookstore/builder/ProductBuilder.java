@@ -9,7 +9,8 @@ import bookstore.Product;
 
 public class ProductBuilder {
 
-	private static final String AVAILABLE_AT_AUSTRIA_SUPPLIER = "xyz";
+	private static final String PROVIDED_BY_AUSTRIA_SUPPLIER = "xyz";
+	private static final String PROVIDED_BY_GERMAN_SUPPLIER = "abc";
 	private String id = "productId";
 	private String name = "product";
 	private BigDecimal singleUnitPrice = new BigDecimal(1);
@@ -19,11 +20,19 @@ public class ProductBuilder {
 		return new ProductBuilder();
 	}
 
-	public static Product aProductNotAvailableInWarehouse() {
+	public static Product aProductProvidedByAustriaSupplier() {
 		// @formatter:off
 		return aProduct()
-			   .withProductId(AVAILABLE_AT_AUSTRIA_SUPPLIER)
+			   .withProductId(PROVIDED_BY_AUSTRIA_SUPPLIER)
 			   .withSingleUnitPrice(new BigDecimal(2)).build();
+		// @formatter:on
+	}
+
+	public static Product aProductProvidedByGermanSupplier() {
+		// @formatter:off
+		return aProduct()
+				.withProductId(PROVIDED_BY_GERMAN_SUPPLIER)
+				.withSingleUnitPrice(new BigDecimal(3)).build();
 		// @formatter:on
 	}
 

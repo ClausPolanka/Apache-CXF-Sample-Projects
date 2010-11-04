@@ -22,4 +22,6 @@ public interface BookstoreLibrary {
 
 	void getFromAustriaSupplier(String id);
 
+	void getFromGermanSupplier(String id);
+
 }

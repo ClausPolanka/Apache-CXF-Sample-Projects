@@ -49,10 +49,9 @@ public class SupplierFacadeJaxWSTest {
 		final Product aProduct = aProduct()
 								 .withProductId("xyz")
 								 .withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
-		final EndpointReferenceType anEndpoint = anEndpoint();
 
 		context.checking(new Expectations() {{
-			oneOf(registry).getAddressFromSupplierFor(aProduct); will(returnValue(anEndpoint));
+			oneOf(registry).getAddressFromSupplierFor(aProduct); will(returnValue(anEndpoint()));
 		}});
 		//@formatter:on
 
