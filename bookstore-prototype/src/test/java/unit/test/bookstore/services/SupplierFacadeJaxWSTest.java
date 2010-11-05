@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsNotAvailable;
 
 import java.math.BigDecimal;
 
@@ -19,12 +20,15 @@ import org.xmlsoap.schemas.ws._2004._08.addressing.EndpointReferenceType;
 import bookstore.Product;
 import bookstore.Supplier;
 import bookstore.SupplierRegistry;
+import bookstore.UnknownProductFault;
 import bookstore.services.SupplierFacadeJaxWs;
 
 public class SupplierFacadeJaxWSTest {
 	private static final String ENDPOINT_ADDRESS = "address";
 	private static final BigDecimal TOTAL_PRICE = new BigDecimal(4);
 	private static final BigDecimal SINGLE_UNIT_PRICE = new BigDecimal(4);
+	private static final int ANY_AMOUNT = 0;
+	protected static final String ERROR_MESSAGE = "Prodcut not available";
 
 	@Rule
 	public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -78,5 +82,18 @@ public class SupplierFacadeJaxWSTest {
 				return TOTAL_PRICE;
 			}
 		};
+	}
+
+	@Test(expected = UnknownProductFault.class)
+	public void reportUnknownProductFaultIfProductIsNotProvidedByAnySupplier() {
+		final Product aProduct = aProductWhichIsNotAvailable();
+
+		//@formatter:off
+		context.checking(new Expectations() {{
+			oneOf(registry).getAddressFromSupplierFor(aProduct); will(throwException(new UnknownProductFault(ERROR_MESSAGE)));
+		}});
+		//@formatter:on
+
+		supplier.order(aProduct, ANY_AMOUNT);
 	}
 }

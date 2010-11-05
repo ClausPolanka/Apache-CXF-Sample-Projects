@@ -1,5 +1,6 @@
 package test.endtoend.bookstore;
 
+import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductNotAvailableInWarehouseAndSupplier;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvideByGermanSupplier;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvidedByAustriaSupplier;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderWithOneItem;
@@ -17,6 +18,7 @@ public class BookstoreEndToEndTest {
 	private static final BigDecimal NEW_BALANCE_OF_3 = new BigDecimal(3);
 	private static final BigDecimal NEW_BALANCE_OF_4 = new BigDecimal(4);
 	private static final String MESSAGE = "message";
+	private static final String ERROR_MESSAGE = "Product not available";
 
 	private final BookstoreLibrary library = new FakeBookStoreLibrary();
 	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(library);
@@ -49,6 +51,15 @@ public class BookstoreEndToEndTest {
 		customer.hasReceivedUpdateForOpenBalance(NEW_BALANCE_OF_2);
 		customer.hasReceivedNotiyfication(MESSAGE);
 	}
+
+	@Test public void
+	customerOrdersProductWhichIsNotAvailableInWarehouseOrProvidedByASupplier() {
+		bookstoreServer.startSellingProducts();
+		customer.orders(anOrderOfAProductNotAvailableInWarehouseAndSupplier());
+		bookstoreServer.hasReceivedNewOrderRequest();
+		customer.hasReceivedNotiyfication(ERROR_MESSAGE);
+	}
+
 	// @formatter:on
 
 	@After

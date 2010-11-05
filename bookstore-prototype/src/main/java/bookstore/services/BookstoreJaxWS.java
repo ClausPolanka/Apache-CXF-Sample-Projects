@@ -34,7 +34,12 @@ public class BookstoreJaxWS implements Bookstore {
 		this.order = anOrder;
 		aCustomer = customerService.getCustomer(anOrder.getCustomerId());
 		for (Item each : anOrder.getItems()) {
-			order(each);
+			try {
+				order(each);
+			} catch (RuntimeException error) {
+				customerService.notify(aCustomer, error.getMessage());
+				return;
+			}
 		}
 		shippingService.shipItems(itemsToArry(anOrder), aCustomer.getShippingAddress());
 		customerService.updateAccount(aCustomer.getId(), newCustomerBalance());

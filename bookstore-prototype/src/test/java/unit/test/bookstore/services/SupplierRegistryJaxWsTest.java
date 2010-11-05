@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsNotAvailable;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -16,6 +17,7 @@ import org.xmlsoap.schemas.ws._2004._08.addressing.EndpointReferenceType;
 import bookstore.BookstoreLibrary;
 import bookstore.Product;
 import bookstore.SupplierRegistry;
+import bookstore.UnknownProductFault;
 import bookstore.services.SupplierRegistryJaxWs;
 
 public class SupplierRegistryJaxWsTest {
@@ -48,13 +50,13 @@ public class SupplierRegistryJaxWsTest {
 		assertThat("Supplier's address", endpoint.getAddress().getValue(), is(equalTo(ADDRESS)));
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = UnknownProductFault.class)
 	public void reportErrorBecauseGivenProductIsUnknown() {
-		final Product aProduct = aProduct().withProductId(PRODUCT_ID).build();
+		final Product aProduct = aProductWhichIsNotAvailable();
 
 		//@formatter:off
 		context.checking(new Expectations() {{
-			oneOf(library).getSupplierAddressFor(PRODUCT_ID); will(returnValue(EMPTY_ADDRESS));
+			oneOf(library).getSupplierAddressFor(aProduct.getId()); will(returnValue(EMPTY_ADDRESS));
 		}});
 		//@formatter:on
 

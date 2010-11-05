@@ -11,6 +11,7 @@ public class ProductBuilder {
 
 	private static final String PROVIDED_BY_AUSTRIA_SUPPLIER = "xyz";
 	private static final String PROVIDED_BY_GERMAN_SUPPLIER = "abc";
+	private static final String NOT_PROVIDED = "blala";
 	private String id = "productId";
 	private String name = "product";
 	private BigDecimal singleUnitPrice = new BigDecimal(1);
@@ -33,6 +34,14 @@ public class ProductBuilder {
 		return aProduct()
 				.withProductId(PROVIDED_BY_GERMAN_SUPPLIER)
 				.withSingleUnitPrice(new BigDecimal(3)).build();
+		// @formatter:on
+	}
+
+	public static Product aProductWhichIsNotAvailable() {
+		// @formatter:off
+		return aProduct()
+				.withProductId(NOT_PROVIDED)
+				.build();
 		// @formatter:on
 	}
 

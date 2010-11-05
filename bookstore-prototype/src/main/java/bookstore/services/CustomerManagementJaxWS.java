@@ -2,6 +2,8 @@ package bookstore.services;
 
 import java.math.BigDecimal;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import bookstore.Customer;
@@ -22,14 +24,14 @@ public class CustomerManagementJaxWS implements CustomerManagement {
 		throw new RuntimeException("Not implemented yet");
 	}
 
+	// @formatter:off
 	@Override
 	public Customer getCustomer(String id) {
-		return webClient().path(MAIN_PATH + id).accept("application/xml").get(Customer.class);
-	}
-
-	@Override
-	public void updateAccount(String id, BigDecimal balance) {
-		webClient().path(MAIN_PATH + id + "/account/").put(balance);
+		return webClient()
+				.type(MediaType.APPLICATION_JSON)
+				.accept(MediaType.APPLICATION_JSON)
+				.path(MAIN_PATH + id)
+				.get(Customer.class);
 	}
 
 	private WebClient webClient() {
@@ -37,13 +39,27 @@ public class CustomerManagementJaxWS implements CustomerManagement {
 	}
 
 	@Override
+	public void updateAccount(String id, BigDecimal balance) {
+		webClient()
+			.type(MediaType.APPLICATION_JSON)
+			.path(MAIN_PATH + id + "/account/")
+			.put(balance);
+	}
+
+	@Override
 	public void updateCustomer(Customer customer) {
-		webClient().path(MAIN_PATH).put(customer);
+		webClient()
+			.type(MediaType.APPLICATION_JSON)
+			.path(MAIN_PATH)
+			.put(customer);
 	}
 
 	@Override
 	public void notify(Customer customer, String message) {
-		webClient().path(MAIN_PATH + "notification/" + message).put(customer);
+		webClient()
+			.type(MediaType.APPLICATION_JSON)
+			.path(MAIN_PATH + "notification/" + message)
+			.put(customer);
 	}
-
+	// @formatter:on
 }

@@ -2,8 +2,10 @@ package test.bookstore.services;
 
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItem;
+import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsNotAvailable;
 
 import java.math.BigDecimal;
 
@@ -22,6 +24,7 @@ import bookstore.Product;
 import bookstore.ProductAvailability;
 import bookstore.ShippingService;
 import bookstore.Supplier;
+import bookstore.UnknownProductFault;
 import bookstore.Warehouse;
 import bookstore.services.BookstoreJaxWS;
 
@@ -37,6 +40,8 @@ public class BookstoreJaxWSTest {
 	private static final boolean IS_AVAILABLE = true;
 	private static final int ESTIMATED_TIME_DELIVERY = 1;
 	private static final boolean NOT_AVAILABLE = false;
+	protected static final int ANY_AMOUNT = 1;
+	protected static final String ERROR_MESSAGE = "Product not available";
 
 	@Rule
 	public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -108,7 +113,7 @@ public class BookstoreJaxWSTest {
 	}
 
 	@Test
-	public void ordersOneProductNotAvailableInWarehouse() {
+	public void ordersOneProductNotAvailableInWarehouseButProvidedBySupplier() {
 		final Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
 		final Product aProduct = aProduct().withProductId(NOT_AVAILABLE_IN_WAREHOUSE).withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
 		final Item anItem = anItem().ofQuantity(1).ofProduct(aProduct).build();
@@ -120,7 +125,7 @@ public class BookstoreJaxWSTest {
 
 			oneOf(warehouse).checkAvailability(aProduct, AMOUNT_1); will(returnValue(notAvailableInWarehouse()));
 
-			oneOf(supplier).order(aProduct, AMOUNT_1);will(returnValue(TOTAL_PRICE));
+			oneOf(supplier).order(aProduct, AMOUNT_1); will(returnValue(TOTAL_PRICE));
 
 			oneOf(shippingService).shipItems(new Item[] {anItem}, aCustomer.getShippingAddress());
 			oneOf(customerService).updateAccount(aCustomer.getId(), NEW_BALENCE_4);
@@ -134,4 +139,27 @@ public class BookstoreJaxWSTest {
 	private ProductAvailability notAvailableInWarehouse() {
 		return new ProductAvailability(NOT_AVAILABLE, NOT_IMPORTANT);
 	};
+
+	@Test
+	public void notifysCustomerThatProductWasUnknown() {
+		//@formatter:off
+		final Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
+		final Product aProduct = aProductWhichIsNotAvailable();
+		final Order anOrder = anOrder()
+								.withItem(anItemOfOneProduct(aProduct))
+								.fromCustomer(aCustomer).build();
+
+		context.checking(new Expectations() {{
+			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
+
+			oneOf(warehouse).checkAvailability(aProduct, ANY_AMOUNT); will(returnValue(notAvailableInWarehouse()));
+
+			oneOf(supplier).order(aProduct, ANY_AMOUNT); will(throwException(new UnknownProductFault(ERROR_MESSAGE)));
+
+			oneOf(customerService).notify(anOrder.getCustomer(), ERROR_MESSAGE);
+		}});
+		//@formatter:on
+
+		bookstoreService.requestOrder(anOrder);
+	}
 }

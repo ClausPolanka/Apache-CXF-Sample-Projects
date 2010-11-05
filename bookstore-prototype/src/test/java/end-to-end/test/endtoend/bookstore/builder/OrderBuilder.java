@@ -6,6 +6,7 @@ import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByAustriaSupplier;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByGermanSupplier;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsNotAvailable;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -14,6 +15,7 @@ import java.util.List;
 import bookstore.Customer;
 import bookstore.Item;
 import bookstore.Order;
+import bookstore.Product;
 
 public class OrderBuilder {
 	private String id = "orderId";
@@ -54,9 +56,27 @@ public class OrderBuilder {
 	public static Order anOrderOfAProductNotavailAbleInWarehouse(Customer aCustomer) {
 		//@formatter:off
 		return anOrder()
-		.fromCustomer(aCustomer)
-		.withItem(anItemOfOneProduct(aProductProvidedByAustriaSupplier()))
-		.build();
+				.fromCustomer(aCustomer)
+				.withItem(anItemOfOneProduct(aProductProvidedByAustriaSupplier()))
+				.build();
+		//@formatter:on
+	}
+
+	public static Order anOrderOfAProductNotAvailableInWarehouseAndSupplier() {
+		//@formatter:off
+		return anOrder()
+				.fromCustomer(aCustomer().build())
+				.withItem(anItemOfOneProduct(aProductWhichIsNotAvailable()))
+				.build();
+		//@formatter:on
+	}
+
+	public static Order anOrderOfAProductNotAvailableInWarehouseAndSupplier(Product aProduct) {
+		//@formatter:off
+		return anOrder()
+				.fromCustomer(aCustomer().build())
+				.withItem(anItemOfOneProduct(aProduct))
+				.build();
 		//@formatter:on
 	}
 
