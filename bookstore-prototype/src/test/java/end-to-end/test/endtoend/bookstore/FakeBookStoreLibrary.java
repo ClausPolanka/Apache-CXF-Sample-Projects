@@ -17,6 +17,9 @@ import bookstore.Product;
 
 public class FakeBookStoreLibrary implements BookstoreLibrary {
 
+	private static final String GERMAN_SUPPLIER_ADDRESS = "http://localhost:9000/germansupplier";
+	private static final String AUSTRIA_SUPPLIER_ADDRESS = "http://localhost:9000/austriasupplier";
+
 	private class ProductInformation {
 		ProductInformation(String id, boolean isAvailable, int deliveryTimeInDays) {
 			this.id = id;
@@ -57,9 +60,10 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	}
 
 	private void createProductsForSuppliers() {
-		supplierAddressesForProducts.put("productId", "http://localhost:9000/austriasupplier");
-		supplierAddressesForProducts.put("xyz", "http://localhost:9000/austriasupplier");
-		supplierAddressesForProducts.put("abc", "http://localhost:9000/germansupplier");
+		supplierAddressesForProducts.put("productId", AUSTRIA_SUPPLIER_ADDRESS);
+		supplierAddressesForProducts.put("xyz", AUSTRIA_SUPPLIER_ADDRESS);
+		supplierAddressesForProducts.put("abc", GERMAN_SUPPLIER_ADDRESS);
+		supplierAddressesForProducts.put("not available", AUSTRIA_SUPPLIER_ADDRESS);
 
 		ArrayList<Product> productsGermany = new ArrayList<Product>();
 		Product aProduct = aProductProvidedByGermanSupplier();
@@ -156,5 +160,23 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 			return;
 		}
 		products.remove(0);
+	}
+
+	@Override
+	public boolean isAvailableInAustria(Product aProduct, int amount) {
+		List<Product> products = supplierAustria.get(aProduct.getId());
+		if (products == null || products.size() == 0) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isAvailableInGermany(Product aProduct, int amount) {
+		List<Product> products = supplierGermany.get(aProduct.getId());
+		if (products == null || products.size() < amount) {
+			return false;
+		}
+		return true;
 	}
 }

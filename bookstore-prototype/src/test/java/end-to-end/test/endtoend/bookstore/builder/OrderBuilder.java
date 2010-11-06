@@ -5,8 +5,10 @@ import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddre
 import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByAustriaSupplier;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByAustriaSupplierButNotAvailable;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByGermanSupplier;
-import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsNotAvailable;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByGermanySupplierButNotAvailable;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsUnknown;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,11 +64,11 @@ public class OrderBuilder {
 		//@formatter:on
 	}
 
-	public static Order anOrderOfAProductNotAvailableInWarehouseAndSupplier() {
+	public static Order anOrderOfAProductWhichIsUnknown() {
 		//@formatter:off
 		return anOrder()
 				.fromCustomer(aCustomer().build())
-				.withItem(anItemOfOneProduct(aProductWhichIsNotAvailable()))
+				.withItem(anItemOfOneProduct(aProductWhichIsUnknown()))
 				.build();
 		//@formatter:on
 	}
@@ -77,6 +79,24 @@ public class OrderBuilder {
 				.fromCustomer(aCustomer().build())
 				.withItem(anItemOfOneProduct(aProduct))
 				.build();
+		//@formatter:on
+	}
+
+	public static Order anOrderOfAProductProvidedByAustriaSupplierButNotAvailableAnymore() {
+		//@formatter:off
+		return anOrder()
+				.fromCustomer(aCustomer().build())
+				.withItem(anItemOfOneProduct(aProductProvidedByAustriaSupplierButNotAvailable()))
+				.build();
+		//@formatter:on
+	}
+
+	public static Order anOrderOfAProductProvidedByGermanSupplierButNotAvailableAnymore() {
+		//@formatter:off
+		return anOrder()
+		.fromCustomer(aCustomer().build())
+		.withItem(anItemOfOneProduct(aProductProvidedByGermanySupplierButNotAvailable()))
+		.build();
 		//@formatter:on
 	}
 

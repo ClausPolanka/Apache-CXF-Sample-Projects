@@ -24,4 +24,8 @@ public interface BookstoreLibrary {
 
 	void getFromGermanSupplier(String id);
 
+	boolean isAvailableInAustria(Product aProduct, int amount);
+
+	boolean isAvailableInGermany(Product aProduct, int amount);
+
 }

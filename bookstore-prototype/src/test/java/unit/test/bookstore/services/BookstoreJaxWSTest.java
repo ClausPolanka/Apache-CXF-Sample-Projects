@@ -5,7 +5,7 @@ import static test.endtoend.bookstore.builder.ItemBuilder.anItem;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
-import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsNotAvailable;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsUnknown;
 
 import java.math.BigDecimal;
 
@@ -144,7 +144,7 @@ public class BookstoreJaxWSTest {
 	public void notifysCustomerThatProductWasUnknown() {
 		//@formatter:off
 		final Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
-		final Product aProduct = aProductWhichIsNotAvailable();
+		final Product aProduct = aProductWhichIsUnknown();
 		final Order anOrder = anOrder()
 								.withItem(anItemOfOneProduct(aProduct))
 								.fromCustomer(aCustomer).build();

@@ -8,10 +8,12 @@ import bookstore.Item;
 import bookstore.Product;
 
 public class ProductBuilder {
-
 	private static final String PROVIDED_BY_AUSTRIA_SUPPLIER = "xyz";
 	private static final String PROVIDED_BY_GERMAN_SUPPLIER = "abc";
-	private static final String NOT_PROVIDED = "blala";
+	private static final String UNKNOWN = "blala";
+	private static final String NOT_AVAILABLE_IN_AUSTRIA = "not available";
+	private static final String NOT_AVAILABLE_IN_GERMANY = "not available in germany";
+
 	private String id = "productId";
 	private String name = "product";
 	private BigDecimal singleUnitPrice = new BigDecimal(1);
@@ -37,11 +39,27 @@ public class ProductBuilder {
 		// @formatter:on
 	}
 
-	public static Product aProductWhichIsNotAvailable() {
+	public static Product aProductWhichIsUnknown() {
 		// @formatter:off
 		return aProduct()
-				.withProductId(NOT_PROVIDED)
+				.withProductId(UNKNOWN)
 				.build();
+		// @formatter:on
+	}
+
+	public static Product aProductProvidedByAustriaSupplierButNotAvailable() {
+		// @formatter:off
+		return aProduct()
+				.withProductId(NOT_AVAILABLE_IN_AUSTRIA)
+				.build();
+		// @formatter:on
+	}
+
+	public static Product aProductProvidedByGermanySupplierButNotAvailable() {
+		// @formatter:off
+		return aProduct()
+		.withProductId(NOT_AVAILABLE_IN_GERMANY)
+		.build();
 		// @formatter:on
 	}
 

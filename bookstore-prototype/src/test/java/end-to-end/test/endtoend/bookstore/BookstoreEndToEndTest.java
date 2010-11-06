@@ -1,8 +1,10 @@
 package test.endtoend.bookstore;
 
-import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductNotAvailableInWarehouseAndSupplier;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvideByGermanSupplier;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvidedByAustriaSupplier;
+import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvidedByAustriaSupplierButNotAvailableAnymore;
+import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvidedByGermanSupplierButNotAvailableAnymore;
+import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductWhichIsUnknown;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderWithOneItem;
 
 import java.math.BigDecimal;
@@ -18,7 +20,7 @@ public class BookstoreEndToEndTest {
 	private static final BigDecimal NEW_BALANCE_OF_3 = new BigDecimal(3);
 	private static final BigDecimal NEW_BALANCE_OF_4 = new BigDecimal(4);
 	private static final String MESSAGE = "message";
-	private static final String ERROR_MESSAGE = "Product not available";
+	private static final String PRODUCT_NOT_AVAILABLE = "Product not available";
 
 	private final BookstoreLibrary library = new FakeBookStoreLibrary();
 	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(library);
@@ -55,9 +57,25 @@ public class BookstoreEndToEndTest {
 	@Test public void
 	customerOrdersProductWhichIsNotAvailableInWarehouseOrProvidedByASupplier() {
 		bookstoreServer.startSellingProducts();
-		customer.orders(anOrderOfAProductNotAvailableInWarehouseAndSupplier());
+		customer.orders(anOrderOfAProductWhichIsUnknown());
 		bookstoreServer.hasReceivedNewOrderRequest();
-		customer.hasReceivedNotiyfication(ERROR_MESSAGE);
+		customer.hasReceivedNotiyfication(PRODUCT_NOT_AVAILABLE);
+	}
+
+	@Test public void
+	customerOrdersProductProvidedByAustriaSupplierButItIsNotAvailableAnymore() {
+		bookstoreServer.startSellingProducts();
+		customer.orders(anOrderOfAProductProvidedByAustriaSupplierButNotAvailableAnymore());
+		bookstoreServer.hasReceivedNewOrderRequest();
+		customer.hasReceivedNotiyfication(PRODUCT_NOT_AVAILABLE);
+	}
+
+	@Test public void
+	customerOrdersProductProvidedByGermanSupplierButItIsNotAvailableAnymore() {
+		bookstoreServer.startSellingProducts();
+		customer.orders(anOrderOfAProductProvidedByGermanSupplierButNotAvailableAnymore());
+		bookstoreServer.hasReceivedNewOrderRequest();
+		customer.hasReceivedNotiyfication(PRODUCT_NOT_AVAILABLE);
 	}
 
 	// @formatter:on

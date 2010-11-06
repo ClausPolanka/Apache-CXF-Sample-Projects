@@ -4,7 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
-import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsNotAvailable;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsUnknown;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -52,7 +52,7 @@ public class SupplierRegistryJaxWsTest {
 
 	@Test(expected = UnknownProductFault.class)
 	public void reportErrorBecauseGivenProductIsUnknown() {
-		final Product aProduct = aProductWhichIsNotAvailable();
+		final Product aProduct = aProductWhichIsUnknown();
 
 		//@formatter:off
 		context.checking(new Expectations() {{
