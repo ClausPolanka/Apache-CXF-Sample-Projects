@@ -5,6 +5,7 @@ import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithUnkno
 import static test.endtoend.bookstore.builder.ItemBuilder.anItem;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
+import static test.endtoend.bookstore.builder.OrderBuilder.anOrderWithOneItem;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsUnknown;
 
@@ -19,6 +20,7 @@ import org.junit.Test;
 
 import bookstore.Customer;
 import bookstore.CustomerManagement;
+import bookstore.InformationReporter;
 import bookstore.Item;
 import bookstore.Order;
 import bookstore.Product;
@@ -56,12 +58,14 @@ public class BookstoreJaxWSTest {
 	private ShippingService shippingService;
 	@Mock
 	private Supplier supplier;
+	@Mock
+	private InformationReporter reporter;
 
 	private BookstoreJaxWS bookstoreService;
 
 	@Before
 	public void createBookStoreService() {
-		bookstoreService = new BookstoreJaxWS(customerService, warehouse, shippingService, supplier);
+		bookstoreService = new BookstoreJaxWS(customerService, warehouse, shippingService, supplier, reporter);
 	}
 
 	@Test
@@ -73,6 +77,7 @@ public class BookstoreJaxWSTest {
 
 		//@formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
 
 			oneOf(warehouse).checkAvailability(aProduct, anItem.getQuantity());	will(returnValue(availableInWarehouse()));
@@ -101,6 +106,7 @@ public class BookstoreJaxWSTest {
 
 		//@formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
 
 			allowing(warehouse).checkAvailability(aProduct, AMOUNT_1); will(returnValue(availableInWarehouse()));
@@ -124,6 +130,7 @@ public class BookstoreJaxWSTest {
 
 		//@formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
 
 			oneOf(warehouse).checkAvailability(aProduct, AMOUNT_1); will(returnValue(notAvailableInWarehouse()));
@@ -153,6 +160,7 @@ public class BookstoreJaxWSTest {
 								.fromCustomer(aCustomer).build();
 
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
 
 			oneOf(warehouse).checkAvailability(aProduct, ANY_AMOUNT); will(returnValue(notAvailableInWarehouse()));
@@ -178,6 +186,7 @@ public class BookstoreJaxWSTest {
 				.build();
 
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
 
 			oneOf(warehouse).checkAvailability(aProduct, ANY_AMOUNT); will(returnValue(availableInWarehouse()));
@@ -187,6 +196,23 @@ public class BookstoreJaxWSTest {
 			oneOf(customerService).notify(anOrder.getCustomer(), SHIPPING_ADDRESS_UNKWOWN);
 		}});
 		//@formatter:on
+
+		bookstoreService.requestOrder(anOrder);
+	}
+
+	@Test
+	public void reportsNewReceivedOrderRequest() {
+		final Order anOrder = anOrderWithOneItem();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			ignoring(customerService);
+			ignoring(warehouse);
+			ignoring(shippingService);
+
+			oneOf(reporter).notifyNewOrderRequest(anOrder);
+		}});
+		// @formatter:on
 
 		bookstoreService.requestOrder(anOrder);
 	}

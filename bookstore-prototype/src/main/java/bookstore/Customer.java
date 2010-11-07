@@ -1,6 +1,7 @@
 package bookstore;
 
 import java.math.BigDecimal;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,5 +99,10 @@ public class Customer {
 
 	public String getMessage() {
 		return message;
+	}
+
+	@Override
+	public String toString() {
+		return MessageFormat.format("Name: {0}, ID: {1}, Open-Balance: {2}", name, id, openBalance);
 	}
 }

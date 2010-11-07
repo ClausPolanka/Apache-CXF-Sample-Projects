@@ -15,14 +15,17 @@ import javax.ws.rs.core.MediaType;
 import bookstore.BookstoreLibrary;
 import bookstore.Customer;
 import bookstore.CustomerManagement;
+import bookstore.InformationReporter;
 
 @Path("/customerservice/")
 public class CustomerManagementJaxRS implements CustomerManagement {
 
 	private BookstoreLibrary database;
+	private InformationReporter reporter;
 
-	public CustomerManagementJaxRS(BookstoreLibrary database) {
+	public CustomerManagementJaxRS(BookstoreLibrary database, InformationReporter reporter) {
 		this.database = database;
+		this.reporter = reporter;
 	}
 
 	@POST
@@ -49,7 +52,9 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Override
 	public Customer getCustomer(@PathParam("id") String id) {
-		return database.getCustomer(id);
+		Customer customer = database.getCustomer(id);
+		reporter.notifyGetCustomerRequest(id, customer);
+		return customer;
 	}
 
 	@PUT

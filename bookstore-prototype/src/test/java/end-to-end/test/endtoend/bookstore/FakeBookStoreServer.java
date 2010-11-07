@@ -56,7 +56,7 @@ public class FakeBookStoreServer {
 		endpoints.add(Endpoint.publish("http://localhost:9000/austriasupplier", new AustriaSupplierJaxWs(library)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/germansupplier", new GermanySupplierJaxWs(library)));
 
-		bookstoreService = new BookstoreJaxWS(createCustomerService(), createWarehouse(), createShippingService(), createSupplierFacade());
+		bookstoreService = new BookstoreJaxWS(createCustomerService(), createWarehouse(), createShippingService(), createSupplierFacade(), reporter);
 		endpoints.add(Endpoint.publish("http://localhost:9000/bookstore", bookstoreService));
 
 		publishJaxRSCustomerManagementService();
@@ -102,7 +102,7 @@ public class FakeBookStoreServer {
 	private void publishJaxRSCustomerManagementService() {
 		JAXRSServerFactoryBean sf = new JAXRSServerFactoryBean();
 		sf.setResourceClasses(CustomerManagementJaxRS.class);
-		sf.setResourceProvider(CustomerManagementJaxRS.class, new SingletonResourceProvider(new CustomerManagementJaxRS(library)));
+		sf.setResourceProvider(CustomerManagementJaxRS.class, new SingletonResourceProvider(new CustomerManagementJaxRS(library, reporter)));
 		sf.setAddress("http://localhost:9000/");
 		jaxRsServer = sf.create();
 	}

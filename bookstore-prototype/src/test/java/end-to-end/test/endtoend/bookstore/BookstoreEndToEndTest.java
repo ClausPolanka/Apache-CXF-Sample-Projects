@@ -17,7 +17,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import bookstore.BookstoreLibrary;
-import bookstore.SystemOutLogger;
+import bookstore.services.SystemOutLogger;
 
 public class BookstoreEndToEndTest {
 

@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import bookstore.Bookstore;
 import bookstore.Customer;
 import bookstore.CustomerManagement;
+import bookstore.InformationReporter;
 import bookstore.Item;
 import bookstore.Order;
 import bookstore.ProductAvailability;
@@ -21,25 +22,26 @@ public class BookstoreJaxWS implements Bookstore {
 	private CustomerManagement customerService;
 	private ShippingService shippingService;
 	private Supplier supplier;
+	private InformationReporter reporter;
 
-	public BookstoreJaxWS(CustomerManagement customerService, Warehouse warehouse, ShippingService shippingService, Supplier supplier) {
+	public BookstoreJaxWS(CustomerManagement customerService, Warehouse warehouse, ShippingService shippingService, Supplier supplier, InformationReporter reporter) {
 		this.customerService = customerService;
 		this.warehouse = warehouse;
 		this.shippingService = shippingService;
 		this.supplier = supplier;
+		this.reporter = reporter;
 	}
 
 	@Override
 	public void requestOrder(Order anOrder) {
 		this.order = anOrder;
+		reporter.notifyNewOrderRequest(anOrder);
 		aCustomer = customerService.getCustomer(anOrder.getCustomerId());
-		for (Item each : anOrder.getItems()) {
-			try {
-				order(each);
-			} catch (RuntimeException orderError) {
-				customerService.notify(aCustomer, orderError.getMessage());
-				return;
-			}
+		try {
+			orderItemsOf(anOrder);
+		} catch (RuntimeException orderError) {
+			customerService.notify(aCustomer, orderError.getMessage());
+			return;
 		}
 		try {
 			shippingService.shipItems(itemsToArry(anOrder), aCustomer.getShippingAddress());
@@ -49,6 +51,12 @@ public class BookstoreJaxWS implements Bookstore {
 		}
 		customerService.updateAccount(aCustomer.getId(), newCustomerBalance());
 		customerService.notify(aCustomer, "message");
+	}
+
+	private void orderItemsOf(Order anOrder) {
+		for (Item each : anOrder.getItems()) {
+			order(each);
+		}
 	}
 
 	private void order(Item anItem) {

@@ -46,6 +46,11 @@ public class CustomerBuilder {
 		return this;
 	}
 
+	public CustomerBuilder withName(String name) {
+		this.name = name;
+		return this;
+	}
+
 	public CustomerBuilder withOpenBalance(BigDecimal openBalance) {
 		this.openBalance = openBalance;
 		return this;
