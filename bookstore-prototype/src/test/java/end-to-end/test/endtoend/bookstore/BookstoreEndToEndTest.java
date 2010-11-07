@@ -10,11 +10,14 @@ import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductWhic
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderWithOneItem;
 
 import java.math.BigDecimal;
+import java.util.logging.Logger;
 
 import org.junit.After;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import bookstore.BookstoreLibrary;
+import bookstore.SystemOutLogger;
 
 public class BookstoreEndToEndTest {
 
@@ -25,7 +28,7 @@ public class BookstoreEndToEndTest {
 	private static final String PRODUCT_NOT_AVAILABLE = "Product not available";
 
 	private final BookstoreLibrary library = new FakeBookStoreLibrary();
-	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(library);
+	private final FakeBookStoreServer bookstoreServer = new FakeBookStoreServer(library, new SystemOutLogger(Logger.getAnonymousLogger()));
 	private final ApplicationClient customer = new ApplicationClient(library);
 
 	// @formatter:off
@@ -89,6 +92,11 @@ public class BookstoreEndToEndTest {
 	}
 
 	// @formatter:on
+
+	@BeforeClass
+	public static void setPropertyToDisableCXFLogging() {
+		System.setProperty("java.util.logging.config.file", "src/test/resources/logging.properties");
+	}
 
 	@After
 	public void stopSelling() {

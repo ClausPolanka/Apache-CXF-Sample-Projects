@@ -16,6 +16,7 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 
 import bookstore.BookstoreLibrary;
 import bookstore.CustomerManagement;
+import bookstore.InformationReporter;
 import bookstore.ShippingService;
 import bookstore.Supplier;
 import bookstore.SupplierRegistry;
@@ -36,9 +37,11 @@ public class FakeBookStoreServer {
 	private BookstoreLibrary library;
 	private List<Endpoint> endpoints = new ArrayList<Endpoint>();
 	private Server jaxRsServer;
+	private InformationReporter reporter;
 
-	public FakeBookStoreServer(BookstoreLibrary library) {
+	public FakeBookStoreServer(BookstoreLibrary library, InformationReporter reporter) {
 		this.library = library;
+		this.reporter = reporter;
 	}
 
 	public void startSellingProducts() {
@@ -47,7 +50,7 @@ public class FakeBookStoreServer {
 		// @formatter:on
 		endpoints.add(Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS(library)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/customermanagement", new CustomerManagementJaxWS()));
-		endpoints.add(Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWs(library)));
+		endpoints.add(Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWs(library, reporter)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/registry", new SupplierRegistryJaxWs(library)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/supplierfacade", new SupplierFacadeJaxWs(createRegistry())));
 		endpoints.add(Endpoint.publish("http://localhost:9000/austriasupplier", new AustriaSupplierJaxWs(library)));

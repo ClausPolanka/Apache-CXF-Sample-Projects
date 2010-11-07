@@ -73,6 +73,11 @@ public class ProductBuilder {
 		return this;
 	}
 
+	public ProductBuilder ofName(String name) {
+		this.name = name;
+		return this;
+	}
+
 	public ProductBuilder forItem(Item item) {
 		items.add(item);
 		return this;

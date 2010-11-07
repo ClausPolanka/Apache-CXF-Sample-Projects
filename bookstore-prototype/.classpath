@@ -5,12 +5,16 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java/integration"/>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java/unit"/>
 	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
+	<classpathentry kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry kind="src" path="src/main/gen"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/develop/hamcrest-all-1.2.jar"/>
 	<classpathentry kind="lib" path="lib/develop/junit-dep-4.8.1.jar" sourcepath="C:/Dev/Src/Workspaces/Eclipse/Helios/jee/Apache-CXF-Sample-Projects/bookstore-prototype/lib/develop/junit-dep-4.8.1-sources.jar"/>
 	<classpathentry kind="lib" path="lib/develop/jmock-2.6.0-RC2.jar"/>
 	<classpathentry kind="lib" path="lib/develop/jmock-junit4-2.6.0-RC2.jar"/>
+	<classpathentry kind="lib" path="lib/develop/jmock-legacy-2.6-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="lib/develop/cglib-nodep-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/develop/objenesis-1.0.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jst.ws.cxf.core.CXF_CLASSPATH_CONTAINER/Apache CXF/2.2.3">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>

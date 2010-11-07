@@ -47,4 +47,8 @@ public class Item {
 	public void setProduct(Product product) {
 		this.product = product;
 	}
+
+	public String getProductName() {
+		return product.getName();
+	}
 }

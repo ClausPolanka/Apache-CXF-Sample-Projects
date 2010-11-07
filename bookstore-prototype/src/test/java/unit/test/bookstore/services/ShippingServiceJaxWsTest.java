@@ -3,6 +3,9 @@ package test.bookstore.services;
 import static org.hamcrest.Matchers.any;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.AddressBuilder.anAddress;
+import static test.endtoend.bookstore.builder.AddressBuilder.anAddressAtUniversity;
+import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
@@ -13,6 +16,7 @@ import org.junit.Test;
 
 import bookstore.Address;
 import bookstore.BookstoreLibrary;
+import bookstore.InformationReporter;
 import bookstore.Item;
 import bookstore.ShippingService;
 import bookstore.UnknownAddressFault;
@@ -28,18 +32,22 @@ public class ShippingServiceJaxWsTest {
 	public JUnitRuleMockery context = new JUnitRuleMockery();
 	@Mock
 	private BookstoreLibrary library;
+	@Mock
+	private InformationReporter reporter;
 
 	private ShippingService shippingService;
 
 	@Before
 	public void createShippingService() {
-		shippingService = new ShippingServiceJaxWs(library);
+		shippingService = new ShippingServiceJaxWs(library, reporter);
 	}
 
 	@Test
 	public void generateUUIDForShippedItems() {
 		// @formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
+
 			oneOf(library).isValid(ANY_ADDRESS.getId()); will(returnValue(true));
 		}});
 		// @formatter:on
@@ -53,6 +61,8 @@ public class ShippingServiceJaxWsTest {
 	public void shipItemsToCustomersGivenValidShippingAddress() {
 		// @formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
+
 			oneOf(library).isValid(CUSTOMER_SHIPPING_ADDRESS.getId()); will(returnValue(true));
 		}});
 		// @formatter:on
@@ -69,5 +79,22 @@ public class ShippingServiceJaxWsTest {
 		// @formatter:on
 
 		shippingService.shipItems(ANY_ITEMS, UNKNOWN_ADDRESS);
+	}
+
+	@Test
+	public void reportInformationOfShippedItems() {
+		final Address anAddress = anAddressAtUniversity();
+		final Item anItem = anItemOfOneProduct(aProduct().ofName("War and Peace").build());
+		final Item[] items = new Item[] { anItem };
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(library).isValid(anAddress.getId()); will(returnValue(true));
+
+			oneOf(reporter).notifyShippingEvent(items, anAddress);
+		}});
+		// @formatter:on
+
+		shippingService.shipItems(items, anAddress);
 	}
 }
