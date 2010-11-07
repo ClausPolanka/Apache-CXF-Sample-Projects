@@ -1,5 +1,7 @@
 package bookstore;
 
+import java.math.BigDecimal;
+
 public interface InformationReporter {
 
 	void notifyShippingEvent(Item[] items, Address anAddress);
@@ -7,5 +9,7 @@ public interface InformationReporter {
 	void notifyNewOrderRequest(Order anOrder);
 
 	void notifyGetCustomerRequest(String customerId, Customer aCustomer);
+
+	void notifyOrderProcessingOf(Product aProduct, int amount, BigDecimal totalPrice);
 
 }

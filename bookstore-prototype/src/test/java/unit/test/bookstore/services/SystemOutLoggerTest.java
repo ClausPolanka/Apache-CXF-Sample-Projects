@@ -8,6 +8,7 @@ import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 
+import java.math.BigDecimal;
 import java.util.logging.Logger;
 
 import org.jmock.Expectations;
@@ -23,9 +24,15 @@ import bookstore.Customer;
 import bookstore.InformationReporter;
 import bookstore.Item;
 import bookstore.Order;
+import bookstore.Product;
 import bookstore.services.SystemOutLogger;
 
 public class SystemOutLoggerTest {
+	private static final BigDecimal TOTAL_PRICE_1 = new BigDecimal(3);
+	private static final BigDecimal TOTAL_PRICE_2 = new BigDecimal(6);
+	private static final BigDecimal SINGLE_UNIT_PRICE = new BigDecimal(3);
+	private static final int AMOUNT_OF_1 = 1;
+	private static final int AMOUNT_OF_2 = 2;
 	private static final String CUSTOMER_NAME = "MiniMe";
 	private static final String CUSTOMER_ID = "279 cedd6-ba3b-4a30-a63e-8e54f28f0037";
 	private static final String PRODUCT_NAME_1 = "War and Peace";
@@ -112,5 +119,33 @@ public class SystemOutLoggerTest {
 		// @formatter:on
 
 		reporter.notifyGetCustomerRequest(CUSTOMER_ID, aCustomer);
+	}
+
+	@Test
+	public void printNotificationAboutOrderProcessingForOneProduct() {
+		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(logger).info(with(allOf(containsString("[Warehouse] Orders product with " + aProduct + "; " + AMOUNT_OF_1 + " time\n      "),
+										  containsString("[Warehouse] Total price: " + TOTAL_PRICE_1))));
+		}});
+		// @formatter:on
+
+		reporter.notifyOrderProcessingOf(aProduct, AMOUNT_OF_1, TOTAL_PRICE_1);
+	}
+
+	@Test
+	public void printNotificationAboutOrderProcessingForTwoProduct() {
+		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(logger).info(with(allOf(containsString("[Warehouse] Orders product with " + aProduct + "; " + AMOUNT_OF_2 + " times\n      "),
+										  containsString("[Warehouse] Total price: " + TOTAL_PRICE_2))));
+		}});
+		// @formatter:on
+
+		reporter.notifyOrderProcessingOf(aProduct, AMOUNT_OF_2, TOTAL_PRICE_2);
 	}
 }

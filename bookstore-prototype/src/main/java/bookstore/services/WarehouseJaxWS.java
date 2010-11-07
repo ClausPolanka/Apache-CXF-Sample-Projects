@@ -3,6 +3,7 @@ package bookstore.services;
 import java.math.BigDecimal;
 
 import bookstore.BookstoreLibrary;
+import bookstore.InformationReporter;
 import bookstore.Product;
 import bookstore.ProductAvailability;
 import bookstore.Warehouse;
@@ -12,9 +13,11 @@ public class WarehouseJaxWS implements Warehouse {
 	private static final boolean NOT_AVAILABLE = false;
 
 	private BookstoreLibrary library;
+	private InformationReporter reporter;
 
-	public WarehouseJaxWS(BookstoreLibrary library) {
+	public WarehouseJaxWS(BookstoreLibrary library, InformationReporter reporter) {
 		this.library = library;
+		this.reporter = reporter;
 	}
 
 	@Override
@@ -34,6 +37,8 @@ public class WarehouseJaxWS implements Warehouse {
 		for (int i = 0; i < amount; i++) {
 			library.deleteProduct(product);
 		}
-		return new BigDecimal(amount).multiply(product.getSingleUnitPrice());
+		BigDecimal totalPrice = new BigDecimal(amount).multiply(product.getSingleUnitPrice());
+		reporter.notifyOrderProcessingOf(product, amount, totalPrice);
+		return totalPrice;
 	}
 }

@@ -15,6 +15,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import bookstore.BookstoreLibrary;
+import bookstore.InformationReporter;
 import bookstore.Product;
 import bookstore.ProductAvailability;
 import bookstore.Warehouse;
@@ -36,12 +37,14 @@ public class WarehouseJaxWSTest {
 
 	@Mock
 	private BookstoreLibrary library;
+	@Mock
+	private InformationReporter reporter;
 
 	private Warehouse warehouseService;
 
 	@Before
 	public void createWarehouse() {
-		warehouseService = new WarehouseJaxWS(library);
+		warehouseService = new WarehouseJaxWS(library, reporter);
 	}
 
 	@Test
@@ -80,6 +83,7 @@ public class WarehouseJaxWSTest {
 
 		// @formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(library).deleteProduct(aProduct);
 		}});
 		// @formatter:on
@@ -95,6 +99,7 @@ public class WarehouseJaxWSTest {
 
 		// @formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			allowing(library).deleteProduct(aProduct);
 		}});
 		// @formatter:on
@@ -102,5 +107,21 @@ public class WarehouseJaxWSTest {
 		BigDecimal totalPrice = warehouseService.order(aProduct, AMOUNT_2);
 
 		assertThat("Total price", totalPrice, is(equalTo(TOTAL_PRICE_4)));
+	}
+
+	@Test
+	public void reportOrderProcessing() {
+		final Product aProduct = aProduct().build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			ignoring(library);
+			oneOf(reporter).notifyOrderProcessingOf(with(aProduct),
+													with(AMOUNT_1),
+													with(any(BigDecimal.class)));
+		}});
+		// @formatter:on
+
+		warehouseService.order(aProduct, AMOUNT_1);
 	}
 }

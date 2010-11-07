@@ -48,7 +48,7 @@ public class FakeBookStoreServer {
 		// @formatter:off
 		// TODO Extract publishing to ServiceStarter within an explicit call of main-method in a separate thread as deamon-thread.
 		// @formatter:on
-		endpoints.add(Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS(library)));
+		endpoints.add(Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS(library, reporter)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/customermanagement", new CustomerManagementJaxWS()));
 		endpoints.add(Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWs(library, reporter)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/registry", new SupplierRegistryJaxWs(library)));
