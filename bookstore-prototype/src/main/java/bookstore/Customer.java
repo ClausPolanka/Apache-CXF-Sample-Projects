@@ -83,10 +83,10 @@ public class Customer {
 		this.openBalance = openBalance;
 	}
 
-	public String getShippingAddress() {
+	public Address getShippingAddress() {
 		for (Address each : addresses) {
 			if (each.isShipping()) {
-				return each.toString();
+				return each;
 			}
 		}
 		throw new RuntimeException("No Shipping Address found for customer: " + this);

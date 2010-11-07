@@ -28,4 +28,6 @@ public interface BookstoreLibrary {
 
 	boolean isAvailableInGermany(Product aProduct, int amount);
 
+	boolean isValid(String address);
+
 }

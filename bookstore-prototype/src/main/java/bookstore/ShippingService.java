@@ -11,7 +11,6 @@ public interface ShippingService {
 // @formatter:on
 
 	@WebMethod(operationName = "ship_items")
-	String shipItems(Item[] items, String customerShippingAddress);
-	// TODO throws UnknownAddressFault, UnknownProductFault
+	String shipItems(Item[] items, Address customerShippingAddress);
 
 }

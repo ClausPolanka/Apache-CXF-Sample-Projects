@@ -2,6 +2,7 @@ package test.endtoend.bookstore.builder;
 
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomer;
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
+import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithUnknownShippingAddress;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByAustriaSupplier;
@@ -20,6 +21,7 @@ import bookstore.Order;
 import bookstore.Product;
 
 public class OrderBuilder {
+
 	private String id = "orderId";
 	private Date orderDate = new Date();
 	private Customer customer = aCustomer().build();
@@ -94,9 +96,18 @@ public class OrderBuilder {
 	public static Order anOrderOfAProductProvidedByGermanSupplierButNotAvailableAnymore() {
 		//@formatter:off
 		return anOrder()
-		.fromCustomer(aCustomer().build())
-		.withItem(anItemOfOneProduct(aProductProvidedByGermanySupplierButNotAvailable()))
-		.build();
+				.fromCustomer(aCustomer().build())
+				.withItem(anItemOfOneProduct(aProductProvidedByGermanySupplierButNotAvailable()))
+				.build();
+		//@formatter:on
+	}
+
+	public static Order anOrderFromCustomerWithUnknownShippingAddress() {
+		//@formatter:off
+		return anOrder()
+				.fromCustomer(aCustomerWithUnknownShippingAddress())
+				.withItem(anItemOfOneProduct(aProduct().build()))
+				.build();
 		//@formatter:on
 	}
 

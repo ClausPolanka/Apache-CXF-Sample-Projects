@@ -1,7 +1,5 @@
 package bookstore.services;
 
-import javax.xml.ws.Endpoint;
-
 public class ServiceStarter {
 
 	public static void main(String[] args) {
@@ -9,7 +7,7 @@ public class ServiceStarter {
 	}
 
 	private void provideServices() {
-		Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWS());
+		// TODO Implement provideServices method in Service Starter.
 	}
 
 }

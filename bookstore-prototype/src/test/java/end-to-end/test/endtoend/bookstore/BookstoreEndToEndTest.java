@@ -1,5 +1,7 @@
 package test.endtoend.bookstore;
 
+import static bookstore.services.ShippingServiceJaxWs.SHIPPING_ADDRESS_UNKNOWN;
+import static test.endtoend.bookstore.builder.OrderBuilder.anOrderFromCustomerWithUnknownShippingAddress;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvideByGermanSupplier;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvidedByAustriaSupplier;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvidedByAustriaSupplierButNotAvailableAnymore;
@@ -76,6 +78,14 @@ public class BookstoreEndToEndTest {
 		customer.orders(anOrderOfAProductProvidedByGermanSupplierButNotAvailableAnymore());
 		bookstoreServer.hasReceivedNewOrderRequest();
 		customer.hasReceivedNotiyfication(PRODUCT_NOT_AVAILABLE);
+	}
+
+	@Test public void
+	customerOrdersProductButCustomersShippingAddressIsUnknown() {
+		bookstoreServer.startSellingProducts();
+		customer.orders(anOrderFromCustomerWithUnknownShippingAddress());
+		bookstoreServer.hasReceivedNewOrderRequest();
+		customer.hasReceivedNotiyfication(SHIPPING_ADDRESS_UNKNOWN);
 	}
 
 	// @formatter:on

@@ -1,5 +1,7 @@
 package bookstore;
 
+import java.text.MessageFormat;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -122,6 +124,11 @@ public class Address {
 
 	public void setOther(boolean isOther) {
 		this.isOther = isOther;
+	}
+
+	@Override
+	public String toString() {
+		return MessageFormat.format("{0} {1}/{2}, {3} {4}", street, house, door, zipCode, city);
 	}
 
 }

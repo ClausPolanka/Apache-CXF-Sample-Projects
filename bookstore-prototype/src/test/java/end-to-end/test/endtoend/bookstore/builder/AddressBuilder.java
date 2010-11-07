@@ -18,6 +18,11 @@ public class AddressBuilder {
 		return new AddressBuilder();
 	}
 
+	public AddressBuilder withAddressId(String id) {
+		this.id = id;
+		return this;
+	}
+
 	public AddressBuilder shippable() {
 		this.isShipping = true;
 		return this;

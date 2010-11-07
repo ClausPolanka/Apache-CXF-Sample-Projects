@@ -25,7 +25,7 @@ import bookstore.services.BookstoreJaxWS;
 import bookstore.services.CustomerManagementJaxRS;
 import bookstore.services.CustomerManagementJaxWS;
 import bookstore.services.GermanySupplierJaxWs;
-import bookstore.services.ShippingServiceJaxWS;
+import bookstore.services.ShippingServiceJaxWs;
 import bookstore.services.SupplierFacadeJaxWs;
 import bookstore.services.SupplierRegistryJaxWs;
 import bookstore.services.WarehouseJaxWS;
@@ -47,7 +47,7 @@ public class FakeBookStoreServer {
 		// @formatter:on
 		endpoints.add(Endpoint.publish("http://localhost:9000/warehouse", new WarehouseJaxWS(library)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/customermanagement", new CustomerManagementJaxWS()));
-		endpoints.add(Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWS()));
+		endpoints.add(Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWs(library)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/registry", new SupplierRegistryJaxWs(library)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/supplierfacade", new SupplierFacadeJaxWs(createRegistry())));
 		endpoints.add(Endpoint.publish("http://localhost:9000/austriasupplier", new AustriaSupplierJaxWs(library)));

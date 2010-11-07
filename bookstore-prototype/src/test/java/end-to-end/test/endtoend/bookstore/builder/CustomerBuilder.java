@@ -11,7 +11,8 @@ import bookstore.Customer;
 import bookstore.Order;
 
 public class CustomerBuilder {
-
+	public static final String CUSTOMER_WITH_UNKNOWN_ADDRESS = "customer unknown address";
+	private static final String UNKNOWN_ADDRESS = "Unknown Address";
 	private String id = "customerId";
 	private String name = "customer";
 	private BigDecimal openBalance = new BigDecimal(0);
@@ -26,9 +27,23 @@ public class CustomerBuilder {
 		//@formatter:off
 		return aCustomer()
 				.withOpenBalance(new BigDecimal(5))
-				.withAddress(anAddress().shippable().build())
-				.withAddress(anAddress().asBillingAddress().build()).build();
+				.withAddress(anAddress().withAddressId("addressA").shippable().build())
+				.withAddress(anAddress().withAddressId("addressB").asBillingAddress().build()).build();
 		//@formatter:on
+	}
+
+	public static Customer aCustomerWithUnknownShippingAddress() {
+		//@formatter:off
+		return aCustomer()
+				.withId(CUSTOMER_WITH_UNKNOWN_ADDRESS)
+				.withAddress(anAddress().withAddressId(UNKNOWN_ADDRESS).shippable().build())
+				.build();
+		//@formatter:on
+	}
+
+	public CustomerBuilder withId(String id) {
+		this.id = id;
+		return this;
 	}
 
 	public CustomerBuilder withOpenBalance(BigDecimal openBalance) {

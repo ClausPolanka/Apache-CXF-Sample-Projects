@@ -1,6 +1,7 @@
 package test.bookstore.services;
 
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
+import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithUnknownShippingAddress;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItem;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItemOfOneProduct;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
@@ -24,11 +25,13 @@ import bookstore.Product;
 import bookstore.ProductAvailability;
 import bookstore.ShippingService;
 import bookstore.Supplier;
+import bookstore.UnknownAddressFault;
 import bookstore.UnknownProductFault;
 import bookstore.Warehouse;
 import bookstore.services.BookstoreJaxWS;
 
 public class BookstoreJaxWSTest {
+	private static final String SHIPPING_ADDRESS_UNKWOWN = "Shipping address unkwown";
 	private static final String MESSAGE = "message";
 	private static final int NOT_IMPORTANT = 0;
 	private static final String NOT_AVAILABLE_IN_WAREHOUSE = "xyz";
@@ -157,6 +160,31 @@ public class BookstoreJaxWSTest {
 			oneOf(supplier).order(aProduct, ANY_AMOUNT); will(throwException(new UnknownProductFault(ERROR_MESSAGE)));
 
 			oneOf(customerService).notify(anOrder.getCustomer(), ERROR_MESSAGE);
+		}});
+		//@formatter:on
+
+		bookstoreService.requestOrder(anOrder);
+	}
+
+	@Test
+	public void notifysCustomerThatShippingAddressWasUnknown() {
+		//@formatter:off
+		final Customer aCustomer = aCustomerWithUnknownShippingAddress();
+		final Product aProduct = aProduct().build();
+		final Item anItem = anItemOfOneProduct(aProduct);
+		final Order anOrder = anOrder()
+				.withItem(anItem)
+				.fromCustomer(aCustomer)
+				.build();
+
+		context.checking(new Expectations() {{
+			oneOf(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
+
+			oneOf(warehouse).checkAvailability(aProduct, ANY_AMOUNT); will(returnValue(availableInWarehouse()));
+			oneOf(warehouse).order(aProduct, ANY_AMOUNT); will(returnValue(TOTAL_PRICE));
+
+			oneOf(shippingService).shipItems(new Item[] {anItem}, aCustomer.getShippingAddress()); will(throwException(new UnknownAddressFault(SHIPPING_ADDRESS_UNKWOWN)));
+			oneOf(customerService).notify(anOrder.getCustomer(), SHIPPING_ADDRESS_UNKWOWN);
 		}});
 		//@formatter:on
 

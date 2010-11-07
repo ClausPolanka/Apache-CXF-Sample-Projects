@@ -1,6 +1,8 @@
 package test.endtoend.bookstore;
 
+import static test.endtoend.bookstore.builder.AddressBuilder.anAddress;
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
+import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithUnknownShippingAddress;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByAustriaSupplier;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByGermanSupplier;
@@ -11,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import bookstore.Address;
 import bookstore.BookstoreLibrary;
 import bookstore.Customer;
 import bookstore.Product;
@@ -38,15 +41,20 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	private Map<String, String> supplierAddressesForProducts = new HashMap<String, String>();
 	private Map<String, List<Product>> supplierAustria = new HashMap<String, List<Product>>();
 	private Map<String, List<Product>> supplierGermany = new HashMap<String, List<Product>>();
+	private Map<String, Address> addresses = new HashMap<String, Address>();
 
 	public FakeBookStoreLibrary() {
 		createTestCustomers();
 		createTestProdcutsForWarehouse();
 		createProductsForSuppliers();
+		createAddressesForShippingService();
 	}
 
 	void createTestCustomers() {
 		Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
+		customers.put(aCustomer.getId(), aCustomer);
+
+		aCustomer = aCustomerWithUnknownShippingAddress();
 		customers.put(aCustomer.getId(), aCustomer);
 	}
 
@@ -82,6 +90,14 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 		productsAustria.add(aProduct);
 		productsAustria.add(aProduct);
 		supplierAustria.put(aProduct.getId(), productsAustria);
+	}
+
+	private void createAddressesForShippingService() {
+		Address anAddress = anAddress().withAddressId("addressA").build();
+		addresses.put(anAddress.getId(), anAddress);
+
+		anAddress = anAddress().withAddressId("addressB").build();
+		addresses.put(anAddress.getId(), anAddress);
 	}
 
 	@Override
@@ -175,6 +191,15 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	public boolean isAvailableInGermany(Product aProduct, int amount) {
 		List<Product> products = supplierGermany.get(aProduct.getId());
 		if (products == null || products.size() < amount) {
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	public boolean isValid(String addressId) {
+		Address anAddress = addresses.get(addressId);
+		if (anAddress == null) {
 			return false;
 		}
 		return true;
