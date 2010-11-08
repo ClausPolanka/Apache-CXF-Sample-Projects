@@ -15,6 +15,8 @@ public class SystemOutLogger implements InformationReporter {
 
 	private static final String WAREHOUSE = "[Warehouse] ";
 	private static final String SHIPPING_SERVICE = "[ShippingService] ";
+	private static final String SUPPLIER_AUSTRIA = "[Supplier (Austria)] ";
+	private static final String SUPPLIER_GERMANY = "[Supplier (Germany)] ";
 	private static final String SUPPLIER_REGISTRY = "[SupplierRegistry] ";
 	private static final String CUSTOMER_MANAGEMENT_JAXRS = "[CustomerManagement (Jax-RS)] ";
 	private static final String BOOKSTORE = "[Bookstore] ";
@@ -107,5 +109,30 @@ public class SystemOutLogger implements InformationReporter {
 		logEntry.append(NEW_LINE + SEPARATOR);
 
 		logger.info(logEntry.toString());
+	}
+
+	@Override
+	public void notifyOrderRequestFromAustriaSupplier(Product aProduct, int amount, BigDecimal totalPrice) {
+		StringBuffer logEntry = new StringBuffer();
+		appendTimeStamp(logEntry, SUPPLIER_AUSTRIA);
+		logEntry.append(SUPPLIER_AUSTRIA + "Received an order-request for: " + aProduct + "; of amount: " + amount);
+		logEntry.append(NEW_LINE + SEPARATOR);
+		logEntry.append(SUPPLIER_AUSTRIA + "Total-price of order: \"" + totalPrice + "\"");
+		logEntry.append(NEW_LINE + SEPARATOR);
+
+		logger.info(logEntry.toString());
+	}
+
+	@Override
+	public void notifyOrderRequestFromGermanSupplier(Product aProduct, int amount, BigDecimal totalPrice) {
+		StringBuffer logEntry = new StringBuffer();
+		appendTimeStamp(logEntry, SUPPLIER_GERMANY);
+		logEntry.append(SUPPLIER_GERMANY + "Received an order-request for: " + aProduct + "; of amount: " + amount);
+		logEntry.append(NEW_LINE + SEPARATOR);
+		logEntry.append(SUPPLIER_GERMANY + "Total-price of order: \"" + totalPrice + "\"");
+		logEntry.append(NEW_LINE + SEPARATOR);
+
+		logger.info(logEntry.toString());
+
 	}
 }

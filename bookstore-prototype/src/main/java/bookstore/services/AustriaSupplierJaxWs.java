@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import javax.jws.WebService;
 
 import bookstore.BookstoreLibrary;
+import bookstore.InformationReporter;
 import bookstore.Product;
 import bookstore.Supplier;
 import bookstore.UnknownProductFault;
@@ -17,9 +18,11 @@ import bookstore.UnknownProductFault;
 public class AustriaSupplierJaxWs implements Supplier {
 // @formatter:on
 	private BookstoreLibrary library;
+	private InformationReporter reporter;
 
-	public AustriaSupplierJaxWs(BookstoreLibrary library) {
+	public AustriaSupplierJaxWs(BookstoreLibrary library, InformationReporter reporter) {
 		this.library = library;
+		this.reporter = reporter;
 	}
 
 	@Override
@@ -30,6 +33,8 @@ public class AustriaSupplierJaxWs implements Supplier {
 		for (int i = 0; i < amount; i++) {
 			library.getFromAustriaSupplier(aProduct.getId());
 		}
-		return aProduct.getSingleUnitPrice().multiply(new BigDecimal(amount));
+		BigDecimal totalPrice = aProduct.getSingleUnitPrice().multiply(new BigDecimal(amount));
+		reporter.notifyOrderRequestFromAustriaSupplier(aProduct, amount, totalPrice);
+		return totalPrice;
 	}
 }

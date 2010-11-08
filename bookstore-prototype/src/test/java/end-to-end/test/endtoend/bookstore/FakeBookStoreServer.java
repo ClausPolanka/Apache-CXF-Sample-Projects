@@ -53,8 +53,8 @@ public class FakeBookStoreServer {
 		endpoints.add(Endpoint.publish("http://localhost:9000/shipping", new ShippingServiceJaxWs(library, reporter)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/registry", new SupplierRegistryJaxWs(library, reporter)));
 		endpoints.add(Endpoint.publish("http://localhost:9000/supplierfacade", new SupplierFacadeJaxWs(createRegistry())));
-		endpoints.add(Endpoint.publish("http://localhost:9000/austriasupplier", new AustriaSupplierJaxWs(library)));
-		endpoints.add(Endpoint.publish("http://localhost:9000/germansupplier", new GermanySupplierJaxWs(library)));
+		endpoints.add(Endpoint.publish("http://localhost:9000/austriasupplier", new AustriaSupplierJaxWs(library, reporter)));
+		endpoints.add(Endpoint.publish("http://localhost:9000/germansupplier", new GermanySupplierJaxWs(library, reporter)));
 
 		bookstoreService = new BookstoreJaxWS(createCustomerService(), createWarehouse(), createShippingService(), createSupplierFacade(), reporter);
 		endpoints.add(Endpoint.publish("http://localhost:9000/bookstore", bookstoreService));

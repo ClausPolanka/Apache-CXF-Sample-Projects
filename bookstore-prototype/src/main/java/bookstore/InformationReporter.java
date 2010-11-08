@@ -14,4 +14,8 @@ public interface InformationReporter {
 
 	void notifyGetSupplierRequest(Product aProduct, String address);
 
+	void notifyOrderRequestFromAustriaSupplier(Product aProduct, int amount, BigDecimal totalPrice);
+
+	void notifyOrderRequestFromGermanSupplier(Product aProduct, int amount, BigDecimal totalPrice);
+
 }

@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 
 import bookstore.BookstoreLibrary;
+import bookstore.InformationReporter;
 import bookstore.Product;
 import bookstore.UnknownProductFault;
 import bookstore.services.GermanySupplierJaxWs;
@@ -28,12 +29,14 @@ public class GermanySupplierJaxWsTest {
 	public JUnitRuleMockery context = new JUnitRuleMockery();
 	@Mock
 	private BookstoreLibrary library;
+	@Mock
+	private InformationReporter reporter;
 
 	private GermanySupplierJaxWs supplier;
 
 	@Before
 	public void createGermanySupplier() {
-		supplier = new GermanySupplierJaxWs(library);
+		supplier = new GermanySupplierJaxWs(library, reporter);
 	}
 
 	@Test(expected = UnknownProductFault.class)
@@ -42,6 +45,7 @@ public class GermanySupplierJaxWsTest {
 
 		//@formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(library).isAvailableInGermany(aProduct, AMOUNT_OF_ONE); will(returnValue(false));
 		}});
 		//@formatter:on
@@ -55,6 +59,7 @@ public class GermanySupplierJaxWsTest {
 
 		//@formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(library).isAvailableInGermany(aProduct, AMOUNT_OF_ONE); will(returnValue(true));
 			oneOf(library).getFromGermanSupplier(aProduct.getId());
 		}});
@@ -70,6 +75,7 @@ public class GermanySupplierJaxWsTest {
 
 		//@formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(library).isAvailableInGermany(aProduct, AMOUNT_OF_TWO); will(returnValue(true));
 
 			oneOf(library).getFromGermanSupplier(aProduct.getId());
@@ -79,5 +85,21 @@ public class GermanySupplierJaxWsTest {
 
 		BigDecimal totalPrice = supplier.order(aProduct, AMOUNT_OF_TWO);
 		assertThat("Total price of prodcuct", totalPrice, is(equalTo(new BigDecimal(6))));
+	}
+
+	@Test
+	public void notifyInformationAboutOrderReqeust() {
+		final Product aProduct = aProductProvidedByGermanSupplier();
+
+		//@formatter:off
+		context.checking(new Expectations() {{
+			oneOf(library).isAvailableInGermany(aProduct, AMOUNT_OF_ONE); will(returnValue(true));
+			oneOf(library).getFromGermanSupplier(aProduct.getId());
+
+			oneOf(reporter).notifyOrderRequestFromGermanSupplier(with(aProduct), with(AMOUNT_OF_ONE), with(any(BigDecimal.class)));
+		}});
+		//@formatter:on
+
+		supplier.order(aProduct, AMOUNT_OF_ONE);
 	}
 }

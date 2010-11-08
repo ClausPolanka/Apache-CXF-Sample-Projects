@@ -28,6 +28,7 @@ import bookstore.Product;
 import bookstore.services.SystemOutLogger;
 
 public class SystemOutLoggerTest {
+	private static final BigDecimal TOTAL_PRICE = new BigDecimal(2);
 	private static final BigDecimal TOTAL_PRICE_1 = new BigDecimal(3);
 	private static final BigDecimal TOTAL_PRICE_2 = new BigDecimal(6);
 	private static final BigDecimal SINGLE_UNIT_PRICE = new BigDecimal(3);
@@ -162,5 +163,33 @@ public class SystemOutLoggerTest {
 		// @formatter:on
 
 		reporter.notifyGetSupplierRequest(aProduct, anAddress);
+	}
+
+	@Test
+	public void printNotificationAboutOrderRequestFromAustriaSupplier() {
+		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(logger).info(with(allOf(containsString("[Supplier (Austria)] Received an order-request for: " + aProduct + "; of amount: " + AMOUNT_OF_1),
+									      containsString("[Supplier (Austria)] Total-price of order: \"" + TOTAL_PRICE + "\""))));
+		}});
+		// @formatter:on
+
+		reporter.notifyOrderRequestFromAustriaSupplier(aProduct, AMOUNT_OF_1, TOTAL_PRICE);
+	}
+
+	@Test
+	public void printNotificationAboutOrderRequestFromGermanSupplier() {
+		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(logger).info(with(allOf(containsString("[Supplier (Germany)] Received an order-request for: " + aProduct + "; of amount: " + AMOUNT_OF_1),
+										  containsString("[Supplier (Germany)] Total-price of order: \"" + TOTAL_PRICE + "\""))));
+		}});
+		// @formatter:on
+
+		reporter.notifyOrderRequestFromGermanSupplier(aProduct, AMOUNT_OF_1, TOTAL_PRICE);
 	}
 }
