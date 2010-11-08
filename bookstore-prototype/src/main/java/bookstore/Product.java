@@ -74,6 +74,6 @@ public class Product {
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("Product-id {0}, name: {1}, single unit price: {2}", id, name, singleUnitPrice);
+		return MessageFormat.format("Product-id: \"{0}\", name: \"{1}\", single unit price: {2}", id, name, singleUnitPrice);
 	}
 }

@@ -4,6 +4,7 @@ import org.xmlsoap.schemas.ws._2004._08.addressing.AttributedURI;
 import org.xmlsoap.schemas.ws._2004._08.addressing.EndpointReferenceType;
 
 import bookstore.BookstoreLibrary;
+import bookstore.InformationReporter;
 import bookstore.Product;
 import bookstore.SupplierRegistry;
 import bookstore.UnknownProductFault;
@@ -11,9 +12,11 @@ import bookstore.UnknownProductFault;
 public class SupplierRegistryJaxWs implements SupplierRegistry {
 
 	private BookstoreLibrary library;
+	private InformationReporter reporter;
 
-	public SupplierRegistryJaxWs(BookstoreLibrary library) {
+	public SupplierRegistryJaxWs(BookstoreLibrary library, InformationReporter reporter) {
 		this.library = library;
+		this.reporter = reporter;
 	}
 
 	@Override
@@ -22,6 +25,7 @@ public class SupplierRegistryJaxWs implements SupplierRegistry {
 		if (notValid(address)) {
 			throw new UnknownProductFault("Product not available");
 		}
+		reporter.notifyGetSupplierRequest(aProduct, address);
 		return anEndpointFor(address);
 	}
 

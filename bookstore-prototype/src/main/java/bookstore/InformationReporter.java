@@ -12,4 +12,6 @@ public interface InformationReporter {
 
 	void notifyOrderProcessingOf(Product aProduct, int amount, BigDecimal totalPrice);
 
+	void notifyGetSupplierRequest(Product aProduct, String address);
+
 }

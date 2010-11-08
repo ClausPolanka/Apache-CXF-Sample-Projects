@@ -148,4 +148,19 @@ public class SystemOutLoggerTest {
 
 		reporter.notifyOrderProcessingOf(aProduct, AMOUNT_OF_2, TOTAL_PRICE_2);
 	}
+
+	@Test
+	public void printNotificationAboutGetSupplierRequest() {
+		final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+		final String anAddress = "http://localhost:9000/supplieraustria";
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(logger).info(with(allOf(containsString("[SupplierRegistry] Received an supplier-address request for: " + aProduct + "\n      "),
+										  containsString("[SupplierRegistry] Found supplier-address: \"" + anAddress + "\""))));
+		}});
+		// @formatter:on
+
+		reporter.notifyGetSupplierRequest(aProduct, anAddress);
+	}
 }

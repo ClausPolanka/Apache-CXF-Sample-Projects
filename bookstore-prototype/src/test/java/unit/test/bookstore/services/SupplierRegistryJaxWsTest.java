@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
+import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByAustriaSupplier;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsUnknown;
 
 import org.jmock.Expectations;
@@ -15,6 +16,7 @@ import org.junit.Test;
 import org.xmlsoap.schemas.ws._2004._08.addressing.EndpointReferenceType;
 
 import bookstore.BookstoreLibrary;
+import bookstore.InformationReporter;
 import bookstore.Product;
 import bookstore.SupplierRegistry;
 import bookstore.UnknownProductFault;
@@ -28,12 +30,14 @@ public class SupplierRegistryJaxWsTest {
 	public JUnitRuleMockery context = new JUnitRuleMockery();
 	@Mock
 	private BookstoreLibrary library;
+	@Mock
+	private InformationReporter reporter;
 
 	private SupplierRegistry registry;
 
 	@Before
 	public void createSupplier() {
-		registry = new SupplierRegistryJaxWs(library);
+		registry = new SupplierRegistryJaxWs(library, reporter);
 	}
 
 	@Test
@@ -42,6 +46,7 @@ public class SupplierRegistryJaxWsTest {
 
 		//@formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(library).getSupplierAddressFor(PRODUCT_ID); will(returnValue(ADDRESS));
 		}});
 		//@formatter:on
@@ -56,7 +61,22 @@ public class SupplierRegistryJaxWsTest {
 
 		//@formatter:off
 		context.checking(new Expectations() {{
+			ignoring(reporter);
 			oneOf(library).getSupplierAddressFor(aProduct.getId()); will(returnValue(EMPTY_ADDRESS));
+		}});
+		//@formatter:on
+
+		registry.getAddressFromSupplierFor(aProduct);
+	}
+
+	@Test
+	public void reportInformationAboutGetSupplierRequest() {
+		final Product aProduct = aProductProvidedByAustriaSupplier();
+
+		//@formatter:off
+		context.checking(new Expectations() {{
+			oneOf(library).getSupplierAddressFor(PRODUCT_ID); will(returnValue(ADDRESS));
+			oneOf(reporter).notifyGetSupplierRequest(aProduct, ADDRESS);
 		}});
 		//@formatter:on
 

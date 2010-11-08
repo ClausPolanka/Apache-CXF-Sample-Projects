@@ -14,11 +14,12 @@ import bookstore.Product;
 public class SystemOutLogger implements InformationReporter {
 
 	private static final String WAREHOUSE = "[Warehouse] ";
-	private static final String SEPARATOR = "      ";
 	private static final String SHIPPING_SERVICE = "[ShippingService] ";
-	private static final String BOOKSTORE = "[Bookstore] ";
+	private static final String SUPPLIER_REGISTRY = "[SupplierRegistry] ";
 	private static final String CUSTOMER_MANAGEMENT_JAXRS = "[CustomerManagement (Jax-RS)] ";
+	private static final String BOOKSTORE = "[Bookstore] ";
 	private static final String NEW_LINE = "\n";
+	private static final String SEPARATOR = "      ";
 
 	private Logger logger;
 
@@ -90,6 +91,19 @@ public class SystemOutLogger implements InformationReporter {
 		logEntry.append(WAREHOUSE + "Orders product with " + aProduct + "; " + amount + " time" + (amount > 1 ? "s" : ""));
 		logEntry.append(NEW_LINE + SEPARATOR);
 		logEntry.append(WAREHOUSE + "Total price: " + totalPrice);
+		logEntry.append(NEW_LINE + SEPARATOR);
+
+		logger.info(logEntry.toString());
+
+	}
+
+	@Override
+	public void notifyGetSupplierRequest(Product aProduct, String address) {
+		StringBuffer logEntry = new StringBuffer();
+		appendTimeStamp(logEntry, SUPPLIER_REGISTRY);
+		logEntry.append(SUPPLIER_REGISTRY + "Received an supplier-address request for: " + aProduct);
+		logEntry.append(NEW_LINE + SEPARATOR);
+		logEntry.append(SUPPLIER_REGISTRY + "Found supplier-address: \"" + address + "\"");
 		logEntry.append(NEW_LINE + SEPARATOR);
 
 		logger.info(logEntry.toString());
