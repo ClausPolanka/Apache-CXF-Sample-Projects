@@ -70,6 +70,7 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void updateAccount(@PathParam("id") String id, BigDecimal balance) {
+		// TODO Implement reporter notification for updateAccount.
 		database.updateAccount(database.getCustomer(id), balance);
 	}
 
@@ -78,6 +79,7 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void notify(Customer customer, @PathParam("message") String message) {
+		// TODO Implement reporter notification for notifyCustomer.
 		Customer c = database.getCustomer(customer.getId());
 		c.notify(message);
 	}
