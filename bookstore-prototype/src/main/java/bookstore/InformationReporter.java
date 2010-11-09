@@ -20,4 +20,6 @@ public interface InformationReporter {
 
 	void notifyUpdateOfCustomersAccount(Customer aCustomer, BigDecimal openBalance);
 
+	void notifyThatCustomerReceivesANotificationMessage(Customer aCustomer, String message);
+
 }

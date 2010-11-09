@@ -79,9 +79,9 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 	@Path("/customers/notification/{message}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
-	public void notify(Customer customer, @PathParam("message") String message) {
-		// TODO Implement reporter notification for notifyCustomer.
-		Customer c = database.getCustomer(customer.getId());
-		c.notify(message);
+	public void notify(Customer aCustomer, @PathParam("message") String message) {
+		Customer customer = database.getCustomer(aCustomer.getId());
+		reporter.notifyThatCustomerReceivesANotificationMessage(aCustomer, message);
+		customer.notify(message);
 	}
 }

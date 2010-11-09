@@ -40,6 +40,8 @@ public class SystemOutLoggerTest {
 	private static final String CUSTOMER_ID = "279 cedd6-ba3b-4a30-a63e-8e54f28f0037";
 	private static final String PRODUCT_NAME_1 = "War and Peace";
 	private static final String PRODUCT_NAME_2 = "Moby Dick";
+	private static final String MESSAGE = "Items successfully shipped.";
+
 	// @formatter:off
 	@Rule
 	public JUnitRuleMockery context = new JUnitRuleMockery() {{
@@ -210,5 +212,19 @@ public class SystemOutLoggerTest {
 		// @formatter:on
 
 		reporter.notifyUpdateOfCustomersAccount(aCustomer, NEW_OPEN_BALANCE_OF_1);
+	}
+
+	@Test
+	public void printNotificationThatCustomerReceivesANotificationMessage() {
+		// @formatter:off
+		final Customer aCustomer = aCustomer().build();
+
+		context.checking(new Expectations() {{
+			oneOf(logger).info(with(allOf(containsString("[CustomerManagement (Jax-RS)] Notification message for customer: " + aCustomer),
+										  containsString("[CustomerManagement (Jax-RS)] Received message: \"" + MESSAGE + "\""))));
+		}});
+		// @formatter:on
+
+		reporter.notifyThatCustomerReceivesANotificationMessage(aCustomer, MESSAGE);
 	}
 }

@@ -148,4 +148,16 @@ public class SystemOutLogger implements InformationReporter {
 
 		logger.info(logEntry.toString());
 	}
+
+	@Override
+	public void notifyThatCustomerReceivesANotificationMessage(Customer aCustomer, String message) {
+		StringBuffer logEntry = new StringBuffer();
+		appendTimeStamp(logEntry, CUSTOMER_MANAGEMENT_JAXRS);
+		logEntry.append(CUSTOMER_MANAGEMENT_JAXRS + "Notification message for customer: " + aCustomer);
+		logEntry.append(NEW_LINE + SEPARATOR);
+		logEntry.append(CUSTOMER_MANAGEMENT_JAXRS + "Received message: \"" + message + "\"");
+		logEntry.append(NEW_LINE + SEPARATOR);
+
+		logger.info(logEntry.toString());
+	}
 }

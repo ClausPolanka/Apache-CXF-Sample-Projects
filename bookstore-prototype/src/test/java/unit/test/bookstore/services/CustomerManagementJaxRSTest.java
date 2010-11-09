@@ -18,9 +18,9 @@ import bookstore.InformationReporter;
 import bookstore.services.CustomerManagementJaxRS;
 
 public class CustomerManagementJaxRSTest {
-	private static final BigDecimal BALANCE_OF_3 = new BigDecimal(3);
-
+	private static final BigDecimal NEW_BALANCE = new BigDecimal(3);
 	private static final String CUSTOMER_ID = "279 cedd6-ba3b-4a30-a63e-8e54f28f0037";
+	private static final String MESSAGE = "Items successfully shipped.";
 
 	@Rule
 	public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -57,11 +57,25 @@ public class CustomerManagementJaxRSTest {
 		// @formatter:off
 		context.checking(new Expectations() {{
 			oneOf(library).getCustomer(CUSTOMER_ID); will(returnValue(aCustomer));
-			oneOf(reporter).notifyUpdateOfCustomersAccount(aCustomer, BALANCE_OF_3);
-			oneOf(library).updateAccount(aCustomer, BALANCE_OF_3);
+			oneOf(reporter).notifyUpdateOfCustomersAccount(aCustomer, NEW_BALANCE);
+			oneOf(library).updateAccount(aCustomer, NEW_BALANCE);
 		}});
 		// @formatter:on
 
-		customerService.updateAccount(CUSTOMER_ID, BALANCE_OF_3);
+		customerService.updateAccount(CUSTOMER_ID, NEW_BALANCE);
+	}
+
+	@Test
+	public void reportThatCustomerReceivesANotificationMessage() {
+		final Customer aCustomer = aCustomer().withId(CUSTOMER_ID).build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(library).getCustomer(CUSTOMER_ID); will(returnValue(aCustomer));
+			oneOf(reporter).notifyThatCustomerReceivesANotificationMessage(aCustomer, MESSAGE);
+		}});
+		// @formatter:on
+
+		customerService.notify(aCustomer, MESSAGE);
 	}
 }
