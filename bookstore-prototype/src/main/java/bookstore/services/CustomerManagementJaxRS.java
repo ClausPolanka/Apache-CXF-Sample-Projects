@@ -16,6 +16,7 @@ import bookstore.BookstoreLibrary;
 import bookstore.Customer;
 import bookstore.CustomerManagement;
 import bookstore.InformationReporter;
+import bookstore.NotificationMessage;
 
 @Path("/customerservice/")
 public class CustomerManagementJaxRS implements CustomerManagement {
@@ -76,12 +77,12 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 	}
 
 	@PUT
-	@Path("/customers/notification/{message}")
+	@Path("/customers/{id}/notification")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
-	public void notify(Customer aCustomer, @PathParam("message") String message) {
-		Customer customer = database.getCustomer(aCustomer.getId());
-		reporter.notifyThatCustomerReceivesANotificationMessage(aCustomer, message);
-		customer.notify(message);
+	public void notify(@PathParam("id") String id, NotificationMessage message) {
+		Customer customer = database.getCustomer(id);
+		reporter.notifyThatCustomerReceivesANotificationMessage(customer, message.getMessage());
+		customer.notify(message.getMessage());
 	}
 }

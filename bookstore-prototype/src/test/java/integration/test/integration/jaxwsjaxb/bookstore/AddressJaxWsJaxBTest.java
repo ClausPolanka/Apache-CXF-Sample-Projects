@@ -2,6 +2,12 @@ package test.integration.jaxwsjaxb.bookstore;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static test.endtoend.bookstore.builder.AddressBuilder.ADDRESS_ID;
+import static test.endtoend.bookstore.builder.AddressBuilder.CITY;
+import static test.endtoend.bookstore.builder.AddressBuilder.DOOR_NR;
+import static test.endtoend.bookstore.builder.AddressBuilder.HOUSE_NR;
+import static test.endtoend.bookstore.builder.AddressBuilder.STREET;
+import static test.endtoend.bookstore.builder.AddressBuilder.ZIP_CODE;
 import static test.endtoend.bookstore.builder.AddressBuilder.anAddress;
 import static test.integration.jaxwsjaxb.bookstore.Foo.HOST;
 
@@ -18,6 +24,7 @@ import bookstore.Address;
 
 public class AddressJaxWsJaxBTest {
 
+	private static final String NEW = " New";
 	private static final String SERVICE_ENDPOINT = HOST + "address";
 
 	@BeforeClass
@@ -43,12 +50,12 @@ public class AddressJaxWsJaxBTest {
 
 		Address result = addressService.testAddress(anAddress);
 
-		assertThat("Address Id", result.getId(), equalTo("addressId New"));
-		assertThat("Address street", result.getStreet(), equalTo("street New"));
-		assertThat("Address city", result.getCity(), equalTo("city New"));
-		assertThat("Address house", result.getHouse(), equalTo(2));
-		assertThat("Address door", result.getDoor(), equalTo(2));
-		assertThat("Address zipCode", result.getZipCode(), equalTo("zipCode New"));
+		assertThat("Address Id", result.getId(), equalTo(ADDRESS_ID + NEW));
+		assertThat("Address street", result.getStreet(), equalTo(STREET + NEW));
+		assertThat("Address city", result.getCity(), equalTo(CITY + NEW));
+		assertThat("Address house", result.getHouse(), equalTo(HOUSE_NR + 1));
+		assertThat("Address door", result.getDoor(), equalTo(DOOR_NR + 1));
+		assertThat("Address zipCode", result.getZipCode(), equalTo(ZIP_CODE + NEW));
 		assertThat("Address shippable", result.isShipping(), equalTo(true));
 		assertThat("Address billing", result.isBilling(), equalTo(true));
 		assertThat("Address other", result.isOther(), equalTo(true));

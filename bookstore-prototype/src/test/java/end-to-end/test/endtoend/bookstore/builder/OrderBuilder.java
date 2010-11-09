@@ -22,7 +22,9 @@ import bookstore.Product;
 
 public class OrderBuilder {
 
-	private String id = "orderId";
+	public static final String ORDER_ID = "4382-23-1-3445-1";
+
+	private String id = ORDER_ID;
 	private Date orderDate = new Date();
 	private Customer customer = aCustomer().build();
 	private List<Item> items = new ArrayList<Item>();

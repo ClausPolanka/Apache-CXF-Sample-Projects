@@ -8,6 +8,7 @@ import org.apache.cxf.jaxrs.client.WebClient;
 
 import bookstore.Customer;
 import bookstore.CustomerManagement;
+import bookstore.NotificationMessage;
 
 public class CustomerManagementJaxWS implements CustomerManagement {
 
@@ -55,11 +56,11 @@ public class CustomerManagementJaxWS implements CustomerManagement {
 	}
 
 	@Override
-	public void notify(Customer customer, String message) {
+	public void notify(String customerId, NotificationMessage message) {
 		webClient()
 			.type(MediaType.APPLICATION_JSON)
-			.path(MAIN_PATH + "notification/" + message)
-			.put(customer);
+			.path(MAIN_PATH + customerId + "/notification")
+			.put(message);
 	}
 	// @formatter:on
 }

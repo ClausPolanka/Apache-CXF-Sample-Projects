@@ -1,8 +1,16 @@
 package test.endtoend.bookstore;
 
+import static bookstore.SupplierRegistry.AUSTRIA_SUPPLIER_ADDRESS;
+import static bookstore.SupplierRegistry.GERMAN_SUPPLIER_ADDRESS;
+import static test.endtoend.bookstore.builder.AddressBuilder.SHIPPING_ID_A;
+import static test.endtoend.bookstore.builder.AddressBuilder.SHIPPING_ID_B;
 import static test.endtoend.bookstore.builder.AddressBuilder.anAddress;
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithAddressesAndOpenBalanceOfFive;
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomerWithUnknownShippingAddress;
+import static test.endtoend.bookstore.builder.ProductBuilder.PROVIDED_BY_AUSTRIA_SUPPLIER_BUT_NOT_AVAILABLE;
+import static test.endtoend.bookstore.builder.ProductBuilder.PROVIDED_BY_AUSTRIA_SUPPLIER_CONTINUOUS_DEL;
+import static test.endtoend.bookstore.builder.ProductBuilder.PROVIDED_BY_AUSTRIA_SUPPLIER_USER_STORIES;
+import static test.endtoend.bookstore.builder.ProductBuilder.PROVIDED_BY_GERMAN_SUPPLIER;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByAustriaSupplier;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByGermanSupplier;
@@ -20,9 +28,7 @@ import bookstore.Product;
 
 public class FakeBookStoreLibrary implements BookstoreLibrary {
 
-	private static final String GERMAN_SUPPLIER_ADDRESS = "http://localhost:9000/germansupplier";
-	private static final String AUSTRIA_SUPPLIER_ADDRESS = "http://localhost:9000/austriasupplier";
-
+	@SuppressWarnings("unused")
 	private class ProductInformation {
 		ProductInformation(String id, boolean isAvailable, int deliveryTimeInDays) {
 			this.id = id;
@@ -68,10 +74,10 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 	}
 
 	private void createProductsForSuppliers() {
-		supplierAddressesForProducts.put("productId", AUSTRIA_SUPPLIER_ADDRESS);
-		supplierAddressesForProducts.put("xyz", AUSTRIA_SUPPLIER_ADDRESS);
-		supplierAddressesForProducts.put("abc", GERMAN_SUPPLIER_ADDRESS);
-		supplierAddressesForProducts.put("not available", AUSTRIA_SUPPLIER_ADDRESS);
+		supplierAddressesForProducts.put(PROVIDED_BY_AUSTRIA_SUPPLIER_USER_STORIES, AUSTRIA_SUPPLIER_ADDRESS);
+		supplierAddressesForProducts.put(PROVIDED_BY_AUSTRIA_SUPPLIER_CONTINUOUS_DEL, AUSTRIA_SUPPLIER_ADDRESS);
+		supplierAddressesForProducts.put(PROVIDED_BY_GERMAN_SUPPLIER, GERMAN_SUPPLIER_ADDRESS);
+		supplierAddressesForProducts.put(PROVIDED_BY_AUSTRIA_SUPPLIER_BUT_NOT_AVAILABLE, AUSTRIA_SUPPLIER_ADDRESS);
 
 		ArrayList<Product> productsGermany = new ArrayList<Product>();
 		Product aProduct = aProductProvidedByGermanSupplier();
@@ -86,17 +92,17 @@ public class FakeBookStoreLibrary implements BookstoreLibrary {
 		supplierAustria.put(aProduct.getId(), productsAustria);
 
 		productsAustria = new ArrayList<Product>();
-		aProduct = aProduct().withProductId("productId").build();
+		aProduct = aProduct().withProductId(PROVIDED_BY_AUSTRIA_SUPPLIER_USER_STORIES).build();
 		productsAustria.add(aProduct);
 		productsAustria.add(aProduct);
 		supplierAustria.put(aProduct.getId(), productsAustria);
 	}
 
 	private void createAddressesForShippingService() {
-		Address anAddress = anAddress().withAddressId("addressA").build();
+		Address anAddress = anAddress().withAddressId(SHIPPING_ID_A).build();
 		addresses.put(anAddress.getId(), anAddress);
 
-		anAddress = anAddress().withAddressId("addressB").build();
+		anAddress = anAddress().withAddressId(SHIPPING_ID_B).build();
 		addresses.put(anAddress.getId(), anAddress);
 	}
 

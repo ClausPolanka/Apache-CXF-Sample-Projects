@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.ItemBuilder.anItem;
+import static test.endtoend.bookstore.builder.ProductBuilder.PRODUCT_ID;
+import static test.endtoend.bookstore.builder.ProductBuilder.PRODUCT_NAME;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 import static test.integration.jaxwsjaxb.bookstore.Foo.HOST;
 
@@ -49,8 +51,8 @@ public class ProductJaxWsJaxBTest {
 
 		Product result = productService.testProduct(aProduct);
 
-		assertThat("Product Id", result.getId(), equalTo("productId New"));
-		assertThat("Product Id", result.getName(), equalTo("product New"));
+		assertThat("Product Id", result.getId(), equalTo(PRODUCT_ID + " New"));
+		assertThat("Product Id", result.getName(), equalTo(PRODUCT_NAME + " New"));
 		assertThat("Product single unit price", result.getSingleUnitPrice(), equalTo(new BigDecimal(2)));
 		assertThat("Product for item", result.getItems().get(0), notNullValue());
 	}

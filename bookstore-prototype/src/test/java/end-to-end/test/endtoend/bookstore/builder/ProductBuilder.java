@@ -8,14 +8,19 @@ import bookstore.Item;
 import bookstore.Product;
 
 public class ProductBuilder {
-	private static final String PROVIDED_BY_AUSTRIA_SUPPLIER = "xyz";
-	private static final String PROVIDED_BY_GERMAN_SUPPLIER = "abc";
-	private static final String UNKNOWN = "blala";
+	public static final String PRODUCT_ID = "978-0321503626";
+	public static final String PRODUCT_NAME = "Growing Object-Oriented Software, Guided by Tests";
+	public static final String PROVIDED_BY_AUSTRIA_SUPPLIER_CONTINUOUS_DEL = "978-0321601919";
+	public static final String PROVIDED_BY_AUSTRIA_SUPPLIER_USER_STORIES = "978-0321205681";
+	public static final String PROVIDED_BY_AUSTRIA_SUPPLIER_BUT_NOT_AVAILABLE = "978-0201633610";
+	public static final String PROVIDED_BY_GERMAN_SUPPLIER = "978-0321336385";
+
+	private static final String UNKNOWN = "978-0201485677";
 	private static final String NOT_AVAILABLE_IN_AUSTRIA = "not available";
 	private static final String NOT_AVAILABLE_IN_GERMANY = "not available in germany";
 
-	private String id = "productId";
-	private String name = "product";
+	private String id = PRODUCT_ID;
+	private String name = PRODUCT_NAME;
 	private BigDecimal singleUnitPrice = new BigDecimal(1);
 	private List<Item> items = new ArrayList<Item>();
 
@@ -26,7 +31,7 @@ public class ProductBuilder {
 	public static Product aProductProvidedByAustriaSupplier() {
 		// @formatter:off
 		return aProduct()
-			   .withProductId(PROVIDED_BY_AUSTRIA_SUPPLIER)
+			   .withProductId(PROVIDED_BY_AUSTRIA_SUPPLIER_CONTINUOUS_DEL)
 			   .withSingleUnitPrice(new BigDecimal(2)).build();
 		// @formatter:on
 	}

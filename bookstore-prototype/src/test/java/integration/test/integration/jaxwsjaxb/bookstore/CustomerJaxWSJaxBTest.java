@@ -4,6 +4,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static test.endtoend.bookstore.builder.AddressBuilder.anAddress;
+import static test.endtoend.bookstore.builder.CustomerBuilder.CUSTOMER_ID;
+import static test.endtoend.bookstore.builder.CustomerBuilder.CUSTOMER_NAME;
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomer;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrder;
 import static test.integration.jaxwsjaxb.bookstore.Foo.HOST;
@@ -20,6 +22,8 @@ import test.integration.jaxwsjaxb.bookstore.services.CustomerTestImpl;
 import bookstore.Customer;
 
 public class CustomerJaxWSJaxBTest {
+
+	private static final String NEW = " New";
 
 	private static final String SERVICE_ENDPOINT = HOST + "customer";
 
@@ -49,8 +53,8 @@ public class CustomerJaxWSJaxBTest {
 
 		Customer result = customerService.testCustomer(aCustomer);
 
-		assertThat("Customer Id", result.getId(), equalTo("customerId New"));
-		assertThat("Customer name", result.getName(), equalTo("customer New"));
+		assertThat("Customer Id", result.getId(), equalTo(CUSTOMER_ID + NEW));
+		assertThat("Customer name", result.getName(), equalTo(CUSTOMER_NAME + NEW));
 		assertThat("Customer address", result.getAddresses().get(0), notNullValue());
 		assertThat("Customer order", result.getOrders().get(0), notNullValue());
 	}

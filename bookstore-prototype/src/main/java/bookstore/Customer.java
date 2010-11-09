@@ -1,7 +1,8 @@
 package bookstore;
 
+import static java.text.MessageFormat.format;
+
 import java.math.BigDecimal;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,6 +104,6 @@ public class Customer {
 
 	@Override
 	public String toString() {
-		return MessageFormat.format("Name: {0}, ID: {1}, Open-Balance: {2}", name, id, openBalance);
+		return format("Name: {0}, ID: {1}, Open-Balance: {2}", name, id, openBalance);
 	}
 }

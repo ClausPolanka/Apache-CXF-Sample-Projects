@@ -28,7 +28,7 @@ public class AustriaSupplierJaxWs implements Supplier {
 	@Override
 	public BigDecimal order(Product aProduct, int amount) {
 		if (!library.isAvailableInAustria(aProduct, amount)) {
-			throw new UnknownProductFault("Product not available");
+			throw new UnknownProductFault("Product: \"" + aProduct + "\" not available anymore.");
 		}
 		for (int i = 0; i < amount; i++) {
 			library.getFromAustriaSupplier(aProduct.getId());

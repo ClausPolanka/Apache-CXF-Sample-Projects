@@ -15,12 +15,13 @@ import bookstore.BookstoreLibrary;
 import bookstore.Customer;
 import bookstore.CustomerManagement;
 import bookstore.InformationReporter;
+import bookstore.NotificationMessage;
 import bookstore.services.CustomerManagementJaxRS;
 
 public class CustomerManagementJaxRSTest {
 	private static final BigDecimal NEW_BALANCE = new BigDecimal(3);
-	private static final String CUSTOMER_ID = "279 cedd6-ba3b-4a30-a63e-8e54f28f0037";
-	private static final String MESSAGE = "Items successfully shipped.";
+	private static final String CUSTOMER_ID = "279cedd6-ba3b-4a30-a63e-8e54f28f0037";
+	private static final NotificationMessage MESSAGE = new NotificationMessage("Items successfully shipped.");
 
 	@Rule
 	public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -72,10 +73,10 @@ public class CustomerManagementJaxRSTest {
 		// @formatter:off
 		context.checking(new Expectations() {{
 			oneOf(library).getCustomer(CUSTOMER_ID); will(returnValue(aCustomer));
-			oneOf(reporter).notifyThatCustomerReceivesANotificationMessage(aCustomer, MESSAGE);
+			oneOf(reporter).notifyThatCustomerReceivesANotificationMessage(aCustomer, MESSAGE.getMessage());
 		}});
 		// @formatter:on
 
-		customerService.notify(aCustomer, MESSAGE);
+		customerService.notify(aCustomer.getId(), MESSAGE);
 	}
 }

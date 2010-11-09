@@ -22,6 +22,7 @@ import bookstore.Customer;
 import bookstore.CustomerManagement;
 import bookstore.InformationReporter;
 import bookstore.Item;
+import bookstore.NotificationMessage;
 import bookstore.Order;
 import bookstore.Product;
 import bookstore.ProductAvailability;
@@ -33,20 +34,19 @@ import bookstore.Warehouse;
 import bookstore.services.BookstoreJaxWS;
 
 public class BookstoreJaxWSTest {
-	private static final String SHIPPING_ADDRESS_UNKWOWN = "Shipping address unkwown";
-	private static final String MESSAGE = "message";
-	private static final int NOT_IMPORTANT = 0;
+	private static final NotificationMessage SHIPPING_ADDRESS_UNKWOWN = new NotificationMessage("Shipping address unkwown");
+	private static final NotificationMessage ERROR_MESSAGE = new NotificationMessage("Product not available");
 	private static final String NOT_AVAILABLE_IN_WAREHOUSE = "xyz";
 	private static final BigDecimal NEW_BALANCE_3 = new BigDecimal(3);
 	private static final BigDecimal NEW_BALENCE_4 = new BigDecimal(4);
 	private static final BigDecimal SINGLE_UNIT_PRICE = new BigDecimal(1);
 	private static final BigDecimal TOTAL_PRICE = new BigDecimal(1);
+	private static final int NOT_IMPORTANT = 0;
 	private static final int AMOUNT_1 = 1;
-	private static final boolean IS_AVAILABLE = true;
 	private static final int ESTIMATED_TIME_DELIVERY = 1;
+	private static final int ANY_AMOUNT = 1;
+	private static final boolean IS_AVAILABLE = true;
 	private static final boolean NOT_AVAILABLE = false;
-	protected static final int ANY_AMOUNT = 1;
-	protected static final String ERROR_MESSAGE = "Product not available";
 
 	@Rule
 	public JUnitRuleMockery context = new JUnitRuleMockery();
@@ -85,7 +85,7 @@ public class BookstoreJaxWSTest {
 
 			oneOf(shippingService).shipItems(new Item[] {anItem}, aCustomer.getShippingAddress());
 			oneOf(customerService).updateAccount(aCustomer.getId(), NEW_BALENCE_4);
-			oneOf(customerService).notify(aCustomer, MESSAGE);
+			oneOf(customerService).notify(with(aCustomer.getId()), with(any(NotificationMessage.class)));
         }});
 		//@formatter:on
 
@@ -114,7 +114,7 @@ public class BookstoreJaxWSTest {
 
 			oneOf(shippingService).shipItems(new Item[] {anItem1, anItem2}, aCustomer.getShippingAddress());
 			oneOf(customerService).updateAccount(aCustomer.getId(), NEW_BALANCE_3);
-			oneOf(customerService).notify(aCustomer, MESSAGE);
+			oneOf(customerService).notify(with(aCustomer.getId()), with(any(NotificationMessage.class)));
 		}});
 		//@formatter:on
 
@@ -139,7 +139,7 @@ public class BookstoreJaxWSTest {
 
 			oneOf(shippingService).shipItems(new Item[] {anItem}, aCustomer.getShippingAddress());
 			oneOf(customerService).updateAccount(aCustomer.getId(), NEW_BALENCE_4);
-			oneOf(customerService).notify(aCustomer, MESSAGE);
+			oneOf(customerService).notify(with(aCustomer.getId()), with(any(NotificationMessage.class)));
 		}});
 		//@formatter:on
 
@@ -165,9 +165,9 @@ public class BookstoreJaxWSTest {
 
 			oneOf(warehouse).checkAvailability(aProduct, ANY_AMOUNT); will(returnValue(notAvailableInWarehouse()));
 
-			oneOf(supplier).order(aProduct, ANY_AMOUNT); will(throwException(new UnknownProductFault(ERROR_MESSAGE)));
+			oneOf(supplier).order(aProduct, ANY_AMOUNT); will(throwException(new UnknownProductFault(ERROR_MESSAGE.getMessage())));
 
-			oneOf(customerService).notify(anOrder.getCustomer(), ERROR_MESSAGE);
+			oneOf(customerService).notify(with(aCustomer.getId()), with(any(NotificationMessage.class)));
 		}});
 		//@formatter:on
 
@@ -192,8 +192,8 @@ public class BookstoreJaxWSTest {
 			oneOf(warehouse).checkAvailability(aProduct, ANY_AMOUNT); will(returnValue(availableInWarehouse()));
 			oneOf(warehouse).order(aProduct, ANY_AMOUNT); will(returnValue(TOTAL_PRICE));
 
-			oneOf(shippingService).shipItems(new Item[] {anItem}, aCustomer.getShippingAddress()); will(throwException(new UnknownAddressFault(SHIPPING_ADDRESS_UNKWOWN)));
-			oneOf(customerService).notify(anOrder.getCustomer(), SHIPPING_ADDRESS_UNKWOWN);
+			oneOf(shippingService).shipItems(new Item[] {anItem}, aCustomer.getShippingAddress()); will(throwException(new UnknownAddressFault(SHIPPING_ADDRESS_UNKWOWN.getMessage())));
+			oneOf(customerService).notify(with(aCustomer.getId()), with(any(NotificationMessage.class)));
 		}});
 		//@formatter:on
 
@@ -202,10 +202,13 @@ public class BookstoreJaxWSTest {
 
 	@Test
 	public void reportsNewReceivedOrderRequest() {
+		final Customer aCustomer = aCustomerWithUnknownShippingAddress();
 		final Order anOrder = anOrderWithOneItem();
 
 		// @formatter:off
 		context.checking(new Expectations() {{
+			allowing(customerService).getCustomer(anOrder.getCustomerId()); will(returnValue(aCustomer));
+
 			ignoring(customerService);
 			ignoring(warehouse);
 			ignoring(shippingService);

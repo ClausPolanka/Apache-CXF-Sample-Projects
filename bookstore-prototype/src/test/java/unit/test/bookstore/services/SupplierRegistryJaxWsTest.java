@@ -3,6 +3,8 @@ package test.bookstore.services;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
+import static test.endtoend.bookstore.builder.ProductBuilder.PRODUCT_ID;
+import static test.endtoend.bookstore.builder.ProductBuilder.PROVIDED_BY_AUSTRIA_SUPPLIER_CONTINUOUS_DEL;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProduct;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductProvidedByAustriaSupplier;
 import static test.endtoend.bookstore.builder.ProductBuilder.aProductWhichIsUnknown;
@@ -23,7 +25,6 @@ import bookstore.UnknownProductFault;
 import bookstore.services.SupplierRegistryJaxWs;
 
 public class SupplierRegistryJaxWsTest {
-	private static final String PRODUCT_ID = "xyz";
 	private static final String EMPTY_ADDRESS = "";
 	private static final String ADDRESS = "http://localhist:9000/supplieraustria";
 	@Rule
@@ -75,7 +76,7 @@ public class SupplierRegistryJaxWsTest {
 
 		//@formatter:off
 		context.checking(new Expectations() {{
-			oneOf(library).getSupplierAddressFor(PRODUCT_ID); will(returnValue(ADDRESS));
+			oneOf(library).getSupplierAddressFor(PROVIDED_BY_AUSTRIA_SUPPLIER_CONTINUOUS_DEL); will(returnValue(ADDRESS));
 			oneOf(reporter).notifyGetSupplierRequest(aProduct, ADDRESS);
 		}});
 		//@formatter:on

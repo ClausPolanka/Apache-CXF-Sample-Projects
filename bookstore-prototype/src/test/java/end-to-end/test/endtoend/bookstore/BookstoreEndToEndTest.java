@@ -1,6 +1,9 @@
 package test.endtoend.bookstore;
 
+import static bookstore.services.BookstoreJaxWS.SUCCESS_MESSAGE;
 import static bookstore.services.ShippingServiceJaxWs.SHIPPING_ADDRESS_UNKNOWN;
+import static java.text.MessageFormat.format;
+import static test.endtoend.bookstore.builder.CustomerBuilder.CUSTOMER_SHIPPING_ADDRESS;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderFromCustomerWithUnknownShippingAddress;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvideByGermanSupplier;
 import static test.endtoend.bookstore.builder.OrderBuilder.anOrderOfAProductProvidedByAustriaSupplier;
@@ -24,7 +27,6 @@ public class BookstoreEndToEndTest {
 	private static final BigDecimal NEW_BALANCE_OF_2 = new BigDecimal(2);
 	private static final BigDecimal NEW_BALANCE_OF_3 = new BigDecimal(3);
 	private static final BigDecimal NEW_BALANCE_OF_4 = new BigDecimal(4);
-	private static final String MESSAGE = "message";
 	private static final String PRODUCT_NOT_AVAILABLE = "Product not available";
 
 	private final BookstoreLibrary library = new FakeBookStoreLibrary();
@@ -38,7 +40,7 @@ public class BookstoreEndToEndTest {
 		customer.orders(anOrderWithOneItem());
 		bookstoreServer.hasReceivedNewOrderRequest();
 		customer.hasReceivedUpdateForOpenBalance(NEW_BALANCE_OF_4);
-		customer.hasReceivedNotiyfication(MESSAGE);
+		customer.hasReceivedNotiyfication(format(SUCCESS_MESSAGE, CUSTOMER_SHIPPING_ADDRESS));
 	}
 
 	@Test public void
@@ -47,7 +49,7 @@ public class BookstoreEndToEndTest {
 		customer.orders(anOrderOfAProductProvidedByAustriaSupplier());
 		bookstoreServer.hasReceivedNewOrderRequest();
 		customer.hasReceivedUpdateForOpenBalance(NEW_BALANCE_OF_3);
-		customer.hasReceivedNotiyfication(MESSAGE);
+		customer.hasReceivedNotiyfication(format(SUCCESS_MESSAGE, CUSTOMER_SHIPPING_ADDRESS));
 	}
 
 	@Test public void
@@ -56,7 +58,7 @@ public class BookstoreEndToEndTest {
 		customer.orders(anOrderOfAProductProvideByGermanSupplier());
 		bookstoreServer.hasReceivedNewOrderRequest();
 		customer.hasReceivedUpdateForOpenBalance(NEW_BALANCE_OF_2);
-		customer.hasReceivedNotiyfication(MESSAGE);
+		customer.hasReceivedNotiyfication(format(SUCCESS_MESSAGE, CUSTOMER_SHIPPING_ADDRESS));
 	}
 
 	@Test public void

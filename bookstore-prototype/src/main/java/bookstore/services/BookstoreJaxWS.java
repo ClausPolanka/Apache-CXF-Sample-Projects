@@ -1,5 +1,7 @@
 package bookstore.services;
 
+import static java.text.MessageFormat.format;
+
 import java.math.BigDecimal;
 
 import bookstore.Bookstore;
@@ -7,6 +9,7 @@ import bookstore.Customer;
 import bookstore.CustomerManagement;
 import bookstore.InformationReporter;
 import bookstore.Item;
+import bookstore.NotificationMessage;
 import bookstore.Order;
 import bookstore.ProductAvailability;
 import bookstore.ShippingService;
@@ -14,10 +17,11 @@ import bookstore.Supplier;
 import bookstore.Warehouse;
 
 public class BookstoreJaxWS implements Bookstore {
+	public static final String SUCCESS_MESSAGE = "Successfully shipped all items to address: \"{0}\"";
+
 	private Order order;
 	private Customer aCustomer;
 	private BigDecimal totalPrice = new BigDecimal(0);
-
 	private Warehouse warehouse;
 	private CustomerManagement customerService;
 	private ShippingService shippingService;
@@ -32,6 +36,7 @@ public class BookstoreJaxWS implements Bookstore {
 		this.reporter = reporter;
 	}
 
+	// @formatter:off
 	@Override
 	public void requestOrder(Order anOrder) {
 		this.order = anOrder;
@@ -40,18 +45,20 @@ public class BookstoreJaxWS implements Bookstore {
 		try {
 			orderItemsOf(anOrder);
 		} catch (RuntimeException orderError) {
-			customerService.notify(aCustomer, orderError.getMessage());
+			customerService.notify(aCustomer.getId(), toNotificationMessage(orderError.getMessage()));
 			return;
 		}
 		try {
 			shippingService.shipItems(itemsToArry(anOrder), aCustomer.getShippingAddress());
 		} catch (RuntimeException shippingError) {
-			customerService.notify(aCustomer, shippingError.getMessage());
+			customerService.notify(aCustomer.getId(), toNotificationMessage(shippingError.getMessage()));
 			return;
 		}
 		customerService.updateAccount(aCustomer.getId(), newCustomerBalance());
-		customerService.notify(aCustomer, "message");
+		customerService.notify(aCustomer.getId(),
+				               toNotificationMessage(format(SUCCESS_MESSAGE, aCustomer.getShippingAddress())));
 	}
+	// @formatter:on
 
 	private void orderItemsOf(Order anOrder) {
 		for (Item each : anOrder.getItems()) {
@@ -90,6 +97,10 @@ public class BookstoreJaxWS implements Bookstore {
 
 	private BigDecimal newCustomerBalance() {
 		return aCustomer.getOpenBalance().subtract(totalPrice);
+	}
+
+	private NotificationMessage toNotificationMessage(String message) {
+		return new NotificationMessage(message);
 	}
 
 	public Order getOrder() {

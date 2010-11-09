@@ -19,6 +19,7 @@ public class Order {
 	private String id;
 	private Customer customer;
 	private Date orderDate;
+
 	@XmlElementWrapper
 	@XmlElements(@XmlElement(name = "item"))
 	private List<Item> items = new ArrayList<Item>();

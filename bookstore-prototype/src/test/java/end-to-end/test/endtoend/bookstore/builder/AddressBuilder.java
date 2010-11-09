@@ -4,12 +4,21 @@ import bookstore.Address;
 
 public class AddressBuilder {
 
-	private String id = "addressId";
-	private String street = "street";
-	private String city = "city";
-	private int houseNr = 1;
-	private int door = 1;
-	private String zipCode = "zipCode";
+	public static final String ADDRESS_ID = "home";
+	public static final String SHIPPING_ID_A = "addressA";
+	public static final String SHIPPING_ID_B = "addressB";
+	public static final String ZIP_CODE = "1070";
+	public static final int DOOR_NR = 1;
+	public static final int HOUSE_NR = 1;
+	public static final String STREET = "Mikrastrasse";
+	public static final String CITY = "Vienna";
+
+	private String id = ADDRESS_ID;
+	private String street = STREET;
+	private String city = CITY;
+	private int houseNr = HOUSE_NR;
+	private int door = DOOR_NR;
+	private String zipCode = ZIP_CODE;
 	private boolean isOther;
 	private boolean isBilling;
 	private boolean isShipping;
@@ -26,8 +35,16 @@ public class AddressBuilder {
 				.withHouseNr(8)
 				.withDoorNr(1)
 				.withZipCode("1040")
-				.inCity("Vienna").build();
+				.inCity(CITY).build();
 		// @formatter:on
+	}
+
+	public static Address aShippingAddressA() {
+		return anAddress().withAddressId(SHIPPING_ID_A).shippable().build();
+	}
+
+	public static Address aBillingAddressB() {
+		return anAddress().withAddressId(SHIPPING_ID_B).asBillingAddress().build();
 	}
 
 	public AddressBuilder withAddressId(String id) {
