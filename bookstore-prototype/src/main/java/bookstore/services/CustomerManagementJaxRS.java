@@ -70,8 +70,9 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Override
 	public void updateAccount(@PathParam("id") String id, BigDecimal balance) {
-		// TODO Implement reporter notification for updateAccount.
-		database.updateAccount(database.getCustomer(id), balance);
+		Customer customer = database.getCustomer(id);
+		reporter.notifyUpdateOfCustomersAccount(customer, balance);
+		database.updateAccount(customer, balance);
 	}
 
 	@PUT

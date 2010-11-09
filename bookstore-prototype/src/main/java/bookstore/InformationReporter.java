@@ -18,4 +18,6 @@ public interface InformationReporter {
 
 	void notifyOrderRequestFromGermanSupplier(Product aProduct, int amount, BigDecimal totalPrice);
 
+	void notifyUpdateOfCustomersAccount(Customer aCustomer, BigDecimal openBalance);
+
 }

@@ -28,7 +28,9 @@ import bookstore.Product;
 import bookstore.services.SystemOutLogger;
 
 public class SystemOutLoggerTest {
-	private static final BigDecimal TOTAL_PRICE = new BigDecimal(2);
+	private static final BigDecimal NEW_OPEN_BALANCE_OF_1 = new BigDecimal(1);
+	private static final BigDecimal OLD_OPEN_BALANCE_OF_2 = new BigDecimal(2);
+	private static final BigDecimal TOTAL_PRICE = OLD_OPEN_BALANCE_OF_2;
 	private static final BigDecimal TOTAL_PRICE_1 = new BigDecimal(3);
 	private static final BigDecimal TOTAL_PRICE_2 = new BigDecimal(6);
 	private static final BigDecimal SINGLE_UNIT_PRICE = new BigDecimal(3);
@@ -191,5 +193,22 @@ public class SystemOutLoggerTest {
 		// @formatter:on
 
 		reporter.notifyOrderRequestFromGermanSupplier(aProduct, AMOUNT_OF_1, TOTAL_PRICE);
+	}
+
+	@Test
+	public void printNotificationAboutUpdateOfCustomersAccount() {
+		// @formatter:off
+		final Customer aCustomer = aCustomer()
+									.withId(CUSTOMER_ID)
+									.withOpenBalance(OLD_OPEN_BALANCE_OF_2).build();
+
+		context.checking(new Expectations() {{
+			oneOf(logger).info(with(allOf(containsString("[CustomerManagement (Jax-RS)] Account-update for customer: " + aCustomer),
+										  containsString("[CustomerManagement (Jax-RS)] Current open balance: \"" + OLD_OPEN_BALANCE_OF_2 + "\""),
+										  containsString("[CustomerManagement (Jax-RS)] New open balance: \"" + NEW_OPEN_BALANCE_OF_1 + "\""))));
+		}});
+		// @formatter:on
+
+		reporter.notifyUpdateOfCustomersAccount(aCustomer, NEW_OPEN_BALANCE_OF_1);
 	}
 }

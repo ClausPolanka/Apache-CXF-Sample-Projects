@@ -133,6 +133,19 @@ public class SystemOutLogger implements InformationReporter {
 		logEntry.append(NEW_LINE + SEPARATOR);
 
 		logger.info(logEntry.toString());
+	}
 
+	@Override
+	public void notifyUpdateOfCustomersAccount(Customer aCustomer, BigDecimal openBalance) {
+		StringBuffer logEntry = new StringBuffer();
+		appendTimeStamp(logEntry, CUSTOMER_MANAGEMENT_JAXRS);
+		logEntry.append(CUSTOMER_MANAGEMENT_JAXRS + "Account-update for customer: " + aCustomer);
+		logEntry.append(NEW_LINE + SEPARATOR);
+		logEntry.append(CUSTOMER_MANAGEMENT_JAXRS + "Current open balance: \"" + aCustomer.getOpenBalance() + "\"");
+		logEntry.append(NEW_LINE + SEPARATOR);
+		logEntry.append(CUSTOMER_MANAGEMENT_JAXRS + "New open balance: \"" + openBalance + "\"");
+		logEntry.append(NEW_LINE + SEPARATOR);
+
+		logger.info(logEntry.toString());
 	}
 }

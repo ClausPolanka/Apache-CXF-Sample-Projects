@@ -2,6 +2,8 @@ package test.bookstore.services;
 
 import static test.endtoend.bookstore.builder.CustomerBuilder.aCustomer;
 
+import java.math.BigDecimal;
+
 import org.jmock.Expectations;
 import org.jmock.auto.Mock;
 import org.jmock.integration.junit4.JUnitRuleMockery;
@@ -16,6 +18,8 @@ import bookstore.InformationReporter;
 import bookstore.services.CustomerManagementJaxRS;
 
 public class CustomerManagementJaxRSTest {
+	private static final BigDecimal BALANCE_OF_3 = new BigDecimal(3);
+
 	private static final String CUSTOMER_ID = "279 cedd6-ba3b-4a30-a63e-8e54f28f0037";
 
 	@Rule
@@ -44,5 +48,20 @@ public class CustomerManagementJaxRSTest {
 		// @formatter:on
 
 		customerService.getCustomer(CUSTOMER_ID);
+	}
+
+	@Test
+	public void reportNotificationAboutAccountUpdateOfCustomer() {
+		final Customer aCustomer = aCustomer().withId(CUSTOMER_ID).build();
+
+		// @formatter:off
+		context.checking(new Expectations() {{
+			oneOf(library).getCustomer(CUSTOMER_ID); will(returnValue(aCustomer));
+			oneOf(reporter).notifyUpdateOfCustomersAccount(aCustomer, BALANCE_OF_3);
+			oneOf(library).updateAccount(aCustomer, BALANCE_OF_3);
+		}});
+		// @formatter:on
+
+		customerService.updateAccount(CUSTOMER_ID, BALANCE_OF_3);
 	}
 }
