@@ -82,7 +82,7 @@ public class BookstoreJaxWSTest {
 									   .withItem(anItem).build();
 
 		allowingCustomerServiceQuerying(aCustomer);
-		allowingWarehouseOrdering(aProduct);
+		allowingWarehouseOrdering(aProduct, 1);
 		expectShippingServiceToShip(anItem);
 		sendNotificationAndUpdateCustomerWith(NEW_BALENCE_OF_4);
 
@@ -96,10 +96,14 @@ public class BookstoreJaxWSTest {
 		}});
 	}
 
-	private void allowingWarehouseOrdering(final Product aProduct) {
+	private void allowingWarehouseOrdering(final Product aProduct, final int quantity) {
 		context.checking(new Expectations() {{
-			allowing(warehouse).checkAvailability(aProduct, 1);	will(returnValue(availableInWarehouse()));
-			allowing(warehouse).order(aProduct, 1); will(returnValue(TOTAL_PRICE));
+			allowing(warehouse).checkAvailability(aProduct, quantity);	will(returnValue(availableInWarehouse()));
+			allowing(warehouse).order(aProduct, quantity); will(returnValue(totalPriceOf(aProduct, quantity)));
+		}
+
+		private BigDecimal totalPriceOf(final Product aProduct, final int quantity) {
+			return aProduct.getSingleUnitPrice().multiply(new BigDecimal(quantity));
 		}});
 	}
 
@@ -115,15 +119,15 @@ public class BookstoreJaxWSTest {
 
 	@Test
 	public void orderExactlyTwoProductsFormWarehouse() {
-		final Item anItem1 = anItem().ofQuantity(1).ofProduct(aProduct).build();
-		final Item anItem2 = anItem().ofQuantity(1).ofProduct(aProduct).build();
+		final Item anItem = anItem().ofQuantity(2)
+									.ofProduct(aProduct).build();
+
 		final Order anOrder = anOrder().fromCustomer(aCustomer)
-									   .withItem(anItem1)
-									   .withItem(anItem2).build();
+									   .withItem(anItem).build();
 
 		allowingCustomerServiceQuerying(aCustomer);
-		allowingWarehouseOrdering(aProduct);
-		expectShippingServiceToShip(anItem1, anItem2);
+		allowingWarehouseOrdering(aProduct, 2);
+		expectShippingServiceToShip(anItem);
 		sendNotificationAndUpdateCustomerWith(NEW_BALANCE_OF_3);
 
 		bookstoreService.requestOrder(anOrder);
@@ -211,7 +215,7 @@ public class BookstoreJaxWSTest {
 									   .fromCustomer(aCustomer).build();
 
 		allowingCustomerServiceQuerying(aCustomer);
-		allowingWarehouseOrdering(aProduct);
+		allowingWarehouseOrdering(aProduct, 1);
 
 		context.checking(new Expectations() {{
 			oneOf(shippingService).shipItems(new Item[] { anItem }, aCustomer.getShippingAddress());
