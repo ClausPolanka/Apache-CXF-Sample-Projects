@@ -51,6 +51,7 @@ public class BookstoreJaxWSTest {
 
 	private final Customer aCustomer = aCustomerWithAddressesAndOpenBalanceOfFive();
 	private final Product aProduct = aProduct().withSingleUnitPrice(SINGLE_UNIT_PRICE).build();
+
 	// @formatter:off
 
 	@Rule

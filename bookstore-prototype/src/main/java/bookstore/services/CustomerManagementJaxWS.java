@@ -1,8 +1,8 @@
 package bookstore.services;
 
-import java.math.BigDecimal;
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import javax.ws.rs.core.MediaType;
+import java.math.BigDecimal;
 
 import org.apache.cxf.jaxrs.client.WebClient;
 
@@ -12,7 +12,7 @@ import bookstore.NotificationMessage;
 
 public class CustomerManagementJaxWS implements CustomerManagement {
 
-	private static final String MAIN_PATH = "customerservice/customers/";
+	private static final String JAX_RS_MAIN_PATH = "customerservice/customers/";
 	private static final String SERVICE_URL = "http://localhost:9000/";
 
 	@Override
@@ -29,9 +29,9 @@ public class CustomerManagementJaxWS implements CustomerManagement {
 	@Override
 	public Customer getCustomer(String id) {
 		return webClient()
-				.type(MediaType.APPLICATION_JSON)
-				.accept(MediaType.APPLICATION_JSON)
-				.path(MAIN_PATH + id)
+				.type(APPLICATION_JSON)
+				.accept(APPLICATION_JSON)
+				.path(JAX_RS_MAIN_PATH + id)
 				.get(Customer.class);
 	}
 
@@ -42,24 +42,24 @@ public class CustomerManagementJaxWS implements CustomerManagement {
 	@Override
 	public void updateAccount(String id, BigDecimal balance) {
 		webClient()
-			.type(MediaType.APPLICATION_JSON)
-			.path(MAIN_PATH + id + "/account/")
+			.type(APPLICATION_JSON)
+			.path(JAX_RS_MAIN_PATH + id + "/account/")
 			.put(balance);
 	}
 
 	@Override
 	public void updateCustomer(Customer customer) {
 		webClient()
-			.type(MediaType.APPLICATION_JSON)
-			.path(MAIN_PATH)
+			.type(APPLICATION_JSON)
+			.path(JAX_RS_MAIN_PATH)
 			.put(customer);
 	}
 
 	@Override
 	public void notify(String customerId, NotificationMessage message) {
 		webClient()
-			.type(MediaType.APPLICATION_JSON)
-			.path(MAIN_PATH + customerId + "/notification")
+			.type(APPLICATION_JSON)
+			.path(JAX_RS_MAIN_PATH + customerId + "/notification")
 			.put(message);
 	}
 	// @formatter:on

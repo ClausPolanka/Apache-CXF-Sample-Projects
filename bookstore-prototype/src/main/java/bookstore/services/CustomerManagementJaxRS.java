@@ -1,5 +1,7 @@
 package bookstore.services;
 
+import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
+
 import java.math.BigDecimal;
 
 import javax.ws.rs.Consumes;
@@ -10,7 +12,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 
 import bookstore.BookstoreLibrary;
 import bookstore.Customer;
@@ -31,8 +32,8 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 
 	@POST
 	@Path("/customers/")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(APPLICATION_JSON)
+	@Produces(APPLICATION_JSON)
 	@Override
 	public Customer createCustomer(Customer customer) {
 		database.addCustomer(customer);
@@ -41,7 +42,7 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 
 	@DELETE
 	@Path("/customers/{id}/")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(APPLICATION_JSON)
 	@Override
 	public void deleteCustomer(String id) {
 		database.deleteCustomer(id);
@@ -49,8 +50,8 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 
 	@GET
 	@Path("/customers/{id}/")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(APPLICATION_JSON)
+	@Produces(APPLICATION_JSON)
 	@Override
 	public Customer getCustomer(@PathParam("id") String id) {
 		Customer customer = database.getCustomer(id);
@@ -60,7 +61,7 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 
 	@PUT
 	@Path("/customers/")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(APPLICATION_JSON)
 	@Override
 	public void updateCustomer(Customer customer) {
 		database.updateCustomer(customer);
@@ -68,7 +69,7 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 
 	@PUT
 	@Path("/customers/{id}/account")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(APPLICATION_JSON)
 	@Override
 	public void updateAccount(@PathParam("id") String id, BigDecimal balance) {
 		Customer customer = database.getCustomer(id);
@@ -78,7 +79,7 @@ public class CustomerManagementJaxRS implements CustomerManagement {
 
 	@PUT
 	@Path("/customers/{id}/notification")
-	@Consumes(MediaType.APPLICATION_JSON)
+	@Consumes(APPLICATION_JSON)
 	@Override
 	public void notify(@PathParam("id") String id, NotificationMessage message) {
 		Customer customer = database.getCustomer(id);

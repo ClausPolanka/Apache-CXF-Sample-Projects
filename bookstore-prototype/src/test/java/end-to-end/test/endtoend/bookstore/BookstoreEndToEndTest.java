@@ -96,7 +96,7 @@ public class BookstoreEndToEndTest {
 	// @formatter:on
 
 	@BeforeClass
-	public static void setPropertyToDisableCXFLogging() {
+	public static void setPropertyToMakeCXFLoggingConfigurable() {
 		System.setProperty("java.util.logging.config.file", "src/test/resources/logging.properties");
 	}
 
