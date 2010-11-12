@@ -11,6 +11,9 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+
+import bookstore.services.util.DateLongAdapter;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement
@@ -18,6 +21,8 @@ public class Order {
 	@XmlAttribute
 	private String id;
 	private Customer customer;
+
+	@XmlJavaTypeAdapter(DateLongAdapter.class)
 	private Date orderDate;
 
 	@XmlElementWrapper
