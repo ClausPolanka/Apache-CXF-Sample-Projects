@@ -7,7 +7,8 @@ import javax.jws.WebParam;
 import javax.jws.WebService;
 
 //@formatter:off
-@WebService(targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/customermanagement")
+@WebService(name = "CustomerManagement",
+			targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/customermanagement")
 public interface CustomerManagement {
 //@formatter:on
 

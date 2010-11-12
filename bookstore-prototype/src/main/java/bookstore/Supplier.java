@@ -6,8 +6,11 @@ import javax.jws.WebMethod;
 import javax.jws.WebParam;
 import javax.jws.WebService;
 
-@WebService(targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/supplier")
+// @formatter:off
+@WebService(name = "Supplier",
+			targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/supplier")
 public interface Supplier {
+// @formatter:on
 
 	/** @return total price. */
 	@WebMethod(operationName = "order")
