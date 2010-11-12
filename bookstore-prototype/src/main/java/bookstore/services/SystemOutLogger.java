@@ -12,7 +12,6 @@ import bookstore.Order;
 import bookstore.Product;
 
 public class SystemOutLogger implements InformationReporter {
-
 	private static final String WAREHOUSE = "[Warehouse] ";
 	private static final String SHIPPING_SERVICE = "[ShippingService] ";
 	private static final String SUPPLIER_AUSTRIA = "[Supplier (Austria)] ";

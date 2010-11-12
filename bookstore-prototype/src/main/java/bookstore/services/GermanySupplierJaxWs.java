@@ -2,13 +2,21 @@ package bookstore.services;
 
 import java.math.BigDecimal;
 
+import javax.jws.WebService;
+
 import bookstore.BookstoreLibrary;
 import bookstore.InformationReporter;
 import bookstore.Product;
 import bookstore.Supplier;
 import bookstore.UnknownProductFault;
 
+// @formatter:off
+@WebService(endpointInterface = "bookstore.Supplier",
+	    	serviceName = "GermanySupplier",
+	    	targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/supplier",
+	    	portName = "SupplierPT")
 public class GermanySupplierJaxWs implements Supplier {
+// @formatter:on
 
 	private BookstoreLibrary library;
 	private InformationReporter reporter;

@@ -4,6 +4,8 @@ import static java.text.MessageFormat.format;
 
 import java.math.BigDecimal;
 
+import javax.jws.WebService;
+
 import bookstore.Bookstore;
 import bookstore.Customer;
 import bookstore.CustomerManagement;
@@ -16,7 +18,14 @@ import bookstore.ShippingService;
 import bookstore.Supplier;
 import bookstore.Warehouse;
 
+// @formatter:off
+@WebService(endpointInterface = "bookstore.Bookstore",
+			serviceName = "BookstoreService",
+			targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/bookstore",
+			portName = "BookstorePT")
 public class BookstoreJaxWS implements Bookstore {
+// @formatter:on
+
 	public static final String SUCCESS_MESSAGE = "Successfully shipped all items to address: \"{0}\"";
 
 	private Order order;

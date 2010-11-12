@@ -4,13 +4,21 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 import java.math.BigDecimal;
 
+import javax.jws.WebService;
+
 import org.apache.cxf.jaxrs.client.WebClient;
 
 import bookstore.Customer;
 import bookstore.CustomerManagement;
 import bookstore.NotificationMessage;
 
+// @formatter:off
+@WebService(endpointInterface="bookstore.CustomerManagement",
+			serviceName = "CustomerManagementServiceJaxWs",
+        	targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/customermanagement",
+        	portName = "CustomerManagementPT")
 public class CustomerManagementJaxWS implements CustomerManagement {
+// @formatter:on
 
 	private static final String JAX_RS_MAIN_PATH = "customerservice/customers/";
 	private static final String SERVICE_URL = "http://localhost:9000/";

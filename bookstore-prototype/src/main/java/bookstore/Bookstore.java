@@ -1,10 +1,13 @@
 package bookstore;
 
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
-@WebService
+@WebService(targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/b")
 public interface Bookstore {
 
-	void requestOrder(Order order);
+	@WebMethod(operationName = "request_order")
+	void requestOrder(@WebParam(name = "order") Order order);
 
 }

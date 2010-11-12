@@ -2,21 +2,31 @@ package bookstore;
 
 import java.math.BigDecimal;
 
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
 import javax.jws.WebService;
 
-@WebService
+//@formatter:off
+@WebService(targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/customermanagement")
 public interface CustomerManagement {
+//@formatter:on
 
-	Customer createCustomer(Customer customer);
+	@WebMethod(operationName = "create_customer")
+	Customer createCustomer(@WebParam(name = "customer") Customer customer);
 
-	void deleteCustomer(String id);
+	@WebMethod(operationName = "delete_customer")
+	void deleteCustomer(@WebParam(name = "id") String id);
 
-	Customer getCustomer(String id);
+	@WebMethod(operationName = "get_customer")
+	Customer getCustomer(@WebParam(name = "id") String id);
 
-	void updateCustomer(Customer customer);
+	@WebMethod(operationName = "update_customer")
+	void updateCustomer(@WebParam(name = "customer") Customer customer);
 
-	void updateAccount(String id, BigDecimal balance);
+	@WebMethod(operationName = "update_account")
+	void updateAccount(@WebParam(name = "id") String id, @WebParam(name = "balance") BigDecimal balance);
 
-	void notify(String customerId, NotificationMessage message);
+	@WebMethod(operationName = "notify_customer")
+	void notify(@WebParam(name = "id") String id, @WebParam(name = "message") NotificationMessage message);
 
 }

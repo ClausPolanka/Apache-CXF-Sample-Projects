@@ -2,6 +2,8 @@ package bookstore.services;
 
 import java.util.UUID;
 
+import javax.jws.WebService;
+
 import bookstore.Address;
 import bookstore.BookstoreLibrary;
 import bookstore.InformationReporter;
@@ -9,7 +11,13 @@ import bookstore.Item;
 import bookstore.ShippingService;
 import bookstore.UnknownAddressFault;
 
+// @formatter:off
+@WebService(endpointInterface = "bookstore.ShippingService",
+			serviceName = "ShippingService",
+			portName = "ShippingPT",
+			targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/shipping")
 public class ShippingServiceJaxWs implements ShippingService {
+// @formatter:on
 
 	public static final String SHIPPING_ADDRESS_UNKNOWN = "Shipping address unknown";
 

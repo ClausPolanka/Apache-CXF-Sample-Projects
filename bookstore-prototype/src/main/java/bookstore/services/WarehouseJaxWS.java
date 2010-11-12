@@ -2,13 +2,21 @@ package bookstore.services;
 
 import java.math.BigDecimal;
 
+import javax.jws.WebService;
+
 import bookstore.BookstoreLibrary;
 import bookstore.InformationReporter;
 import bookstore.Product;
 import bookstore.ProductAvailability;
 import bookstore.Warehouse;
 
+//@formatter:off
+@WebService(endpointInterface = "bookstore.Warehouse",
+			serviceName = "WarehouseService",
+			targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/warehouse",
+			portName = "WarehousePT")
 public class WarehouseJaxWS implements Warehouse {
+//@formatter:off
 	private static final boolean AVAILABLE = true;
 	private static final boolean NOT_AVAILABLE = false;
 
