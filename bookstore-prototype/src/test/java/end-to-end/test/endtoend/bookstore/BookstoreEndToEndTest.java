@@ -35,7 +35,7 @@ public class BookstoreEndToEndTest {
 
 	// @formatter:off
 	@Test public void
-	customerWithBalanceOfFiveOrdersOneProductOfPriceOneWhichIsAvailableInWarehouse() {
+	customerWithBalanceOfFiveOrdersOneProductOfPriceOneWhichIsAvailableInWarehouse() throws InterruptedException {
 		bookstoreServer.startSellingProducts();
 		customer.orders(anOrderWithOneItem());
 		bookstoreServer.hasReceivedNewOrderRequest();

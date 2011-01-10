@@ -35,7 +35,7 @@ public class AddressJaxWsJaxBTest {
 	private AddressTest addressService;
 
 	@Before
-	public void createAddressServiceClient() {
+	public void createAddressServiceClient() throws InterruptedException {
 		JaxWsProxyFactoryBean factory = new JaxWsProxyFactoryBean();
 		factory.setServiceClass(AddressTest.class);
 		factory.setAddress(SERVICE_ENDPOINT);

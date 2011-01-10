@@ -37,7 +37,8 @@ public class OrderBuilder {
 		//@formatter:off
 		return anOrder()
 				.fromCustomer(aCustomerWithAddressesAndOpenBalanceOfFive())
-				.withItem(anItemOfOneProduct(aProduct().build())).build();
+				.withItem(anItemOfOneProduct(aProduct().build()))
+				.build();
 		//@formatter:on
 	}
 

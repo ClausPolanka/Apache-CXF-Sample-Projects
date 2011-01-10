@@ -6,7 +6,7 @@ import javax.jws.WebService;
 
 // @formatter:off
 @WebService(name = "Bookstore",
-			targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/b")
+			targetNamespace = "http://infosys.tuwien.ac.at/aic10/ass1/dto/bookstore")
 public interface Bookstore {
 // @formatter:on
 
